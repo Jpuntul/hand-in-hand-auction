@@ -3,7 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
-export default function LoginPage() {
+/**
+ * LoginPage component renders a registration form for users to enter their name, email, and phone number.
+ * On submission, the user information is saved to Firestore and localStorage, and the user is navigated to the bidding room.
+ *
+ * Features:
+ * - Collects user name, email, and phone number.
+ * - Validates required fields and phone number length.
+ * - Saves user data to Firestore and localStorage.
+ * - Navigates to the bidding room upon successful registration.
+ * - Displays loading state during submission.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered login/registration page for the auction.
+ */
+export default function Login() {
 
   const navigate = useNavigate();
 

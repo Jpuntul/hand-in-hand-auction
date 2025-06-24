@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
+import Login from './pages/LoginPage';
+import BiddingRoom from './pages/BiddingRoomPage';
 import './App.css'
 
 function App() {
@@ -7,7 +8,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/bidding-room" element={<BiddingRoom />} />
       </Routes>
     </Router>
   )
