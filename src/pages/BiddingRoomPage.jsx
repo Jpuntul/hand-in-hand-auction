@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, doc } from 'firebase/firestore';
 import BackgroundImg from '../assets/background.jpg';
 
 const BiddingRoom = () => {
@@ -18,22 +18,37 @@ const BiddingRoom = () => {
     const savedUserInfo = localStorage.getItem('userInfo');
     if (!savedUserInfo) {
       alert('Guest information not found. Please register first.');
-      // navigate('/'); - Replace with your routing logic
       return;
     }
-    
     const parsedUserInfo = JSON.parse(savedUserInfo);
     if (!parsedUserInfo.name || !parsedUserInfo.email) {
       alert('Guest information not found. Please register first.');
-      // navigate('/'); - Replace with your routing logic
       return;
     }
-    
     setUserInfo(parsedUserInfo);
-    
-    // Initialize Firebase and fetch data
-    // You'll need to uncomment and implement Firebase initialization
-    // initializeFirebase();
+
+    // Subscribe to items_list collection
+    const unsubItems = onSnapshot(collection(db, 'items_list'), (snapshot) => {
+      const itemsObj = {};
+      snapshot.forEach(doc => {
+        itemsObj[doc.id] = doc.data();
+      });
+      setItems(itemsObj);
+    });
+
+    // Subscribe to bids collection
+    const unsubBids = onSnapshot(collection(db, 'bids'), (snapshot) => {
+      const bidsObj = {};
+      snapshot.forEach(doc => {
+        bidsObj[doc.id] = doc.data();
+      });
+      setBids(bidsObj);
+    });
+
+    return () => {
+      unsubItems();
+      unsubBids();
+    };
   }, []);
 
   const formatNumber = (num) => {
@@ -185,12 +200,8 @@ const BiddingRoom = () => {
           placeholder="Search items..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full max-w-lg mx-auto block p-3 text-base rounded-lg border-none shadow-lg"
-          style={{
-            backgroundColor: '#3a5fcfb8',
-            color: '#daa520ae',
-            boxShadow: '0 0 5px rgba(212, 175, 55, 0.2)'
-          }}
+          className="auction-input w-full max-w-lg mx-auto block text-base shadow-lg"
+          style={{ backgroundColor: '#3a5fcfb8', color: '#daa520ae', boxShadow: '0 0 5px rgba(212, 175, 55, 0.2)' }}
         />
       </div>
 
@@ -206,11 +217,7 @@ const BiddingRoom = () => {
           return (
             <div
               key={key}
-              className="max-w-lg mx-auto mb-6 p-4 rounded-xl shadow-lg"
-              style={{
-                backgroundColor: '#fbefd68f',
-                boxShadow: '0 0 10px rgba(212, 175, 55, 0.2)'
-              }}
+              className="auction-card max-w-lg mx-auto mb-6 p-4 shadow-lg"
             >
               <h2 className="mt-0 text-xl mb-2 pb-1" style={{
                 color: '#DAA520',
@@ -219,20 +226,20 @@ const BiddingRoom = () => {
                 <span>#{item.item_no || '?'}</span> {item.name || key}
               </h2>
               
-              <p style={{ color: '#9d8042' }}>
+              <p style={{ color: '#9d8042' }} className='text-left'>
                 <strong>Description:</strong><br />
                 {item.description || 'No description available.'}
               </p>
-              <p style={{ color: '#9d8042' }}>
+              <p style={{ color: '#9d8042' }} className='text-left'>
                 <strong>Value:</strong> {value}
               </p>
-              <p style={{ color: '#9d8042' }}>
+              <p style={{ color: '#9d8042' }} className='text-left'>
                 <strong>Starting Bid:</strong> {starting_bid} (THB 500 Min. Increments)
               </p>
-              <p style={{ color: '#9d8042' }}>
+              <p style={{ color: '#9d8042' }} className='text-left'>
                 <strong>Highest Bid:</strong> {bid}
               </p>
-              <p style={{ color: '#9d8042' }}>
+              <p style={{ color: '#9d8042' }} className='text-left'>
                 <strong>Bidder:</strong> {bidder}
               </p>
               
@@ -242,20 +249,11 @@ const BiddingRoom = () => {
                   placeholder="Enter bid amount"
                   value={bidInputs[key] || ''}
                   onChange={(e) => handleBidInputChange(key, e.target.value)}
-                  className="flex-1 p-2 rounded-lg text-base border-none"
-                  style={{
-                    backgroundColor: '#fffbe6',
-                    color: '#121212'
-                  }}
+                  className="auction-input flex-1 text-base"
                 />
                 <button
                   onClick={() => handleSubmitBid(key)}
-                  className="px-4 py-2 rounded-lg font-bold cursor-pointer whitespace-nowrap hover:bg-yellow-600"
-                  style={{
-                    backgroundColor: '#132c7a',
-                    color: '#dcdcdc',
-                    border: 'none'
-                  }}
+                  className="auction-btn px-4 py-2 whitespace-nowrap"
                 >
                   Submit Bid
                 </button>
@@ -263,8 +261,7 @@ const BiddingRoom = () => {
               
               <a
                 href={`/history?item=${key}`}
-                className="inline-block mt-2 text-sm"
-                style={{ color: '#9d8042' }}
+                className="inline-block mt-2 text-sm auction-highlight"
               >
                 View Detail & Bid History
               </a>

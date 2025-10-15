@@ -1,3 +1,82 @@
+/* === Global Auction Theme Styles === */
+body {
+  font-family: 'Inter', sans-serif;
+  background: url('/background.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #9d8042;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  color: #DAA520;
+}
+
+.auction-input, input[type="text"], input[type="number"], textarea {
+  background: #fffbe6;
+  color: #121212;
+  border: 2px solid #888;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  outline: none;
+  margin-bottom: 2px;
+  transition: border 0.2s;
+}
+.auction-input:focus, input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+  border: 2px solid #132c7a;
+}
+
+.auction-btn, button, .btn {
+  background-color: #132c7a;
+  color: #D4AF37;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.auction-btn:hover, button:hover, .btn:hover {
+  background-color: #b48e2e;
+  color: #fff;
+}
+
+.auction-table, table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fbefd68f;
+  border-radius: 14px;
+  overflow: hidden;
+  font-size: 1rem;
+}
+.auction-table th, table th {
+  background: #132d7ac9;
+  color: #D4AF37;
+  padding: 14px;
+  border-bottom: 2px solid #D4AF37;
+}
+.auction-table td, table td {
+  padding: 14px;
+  color: #9d8042;
+  border-bottom: 1px solid #f3e6c6;
+}
+.auction-table tr:last-child td, table tr:last-child td {
+  border-bottom: none;
+}
+
+.auction-card, .auction-panel {
+  background: #fbefd68f;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(212,175,55,0.13);
+  padding: 1.5rem 2rem;
+}
+
+.auction-highlight {
+  color: #DAA520;
+  font-weight: bold;
+}
 @import "tailwindcss";
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

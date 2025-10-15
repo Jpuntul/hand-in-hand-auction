@@ -2,39 +2,54 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-// Mock hooks and utilities for demonstration - replace with your actual imports
+
+// Firebase imports
+import { db } from '../../firebase';
+import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
+
+// Hook to fetch items from Firestore
 const useItems = () => {
   const [items, setItems] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      setItems({
-        'item1': { item_no: 1, name: 'Sample Item 1', sponsor: 'Sponsor A', description: 'Description 1' },
-        'item2': { item_no: 2, name: 'Sample Item 2', sponsor: 'Sponsor B', description: 'Description 2' }
+    const unsub = onSnapshot(collection(db, 'items_list'), (snapshot) => {
+      const itemsObj = {};
+      snapshot.forEach(doc => {
+        itemsObj[doc.id] = doc.data();
       });
+      setItems(itemsObj);
       setLoading(false);
-    }, 1000);
+    }, (err) => {
+      setError(err);
+      setLoading(false);
+    });
+    return () => unsub();
   }, []);
 
   return { items, loading, error };
 };
 
+// Hook to fetch bids from Firestore
 const useBids = () => {
   const [bids, setBids] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      setBids({
-        'item1': { bid: '1500', bidder: 'John Doe' }
+    const unsub = onSnapshot(collection(db, 'bids'), (snapshot) => {
+      const bidsObj = {};
+      snapshot.forEach(doc => {
+        bidsObj[doc.id] = doc.data();
       });
+      setBids(bidsObj);
       setLoading(false);
-    }, 1000);
+    }, (err) => {
+      setError(err);
+      setLoading(false);
+    });
+    return () => unsub();
   }, []);
 
   return { bids, loading, error };
@@ -65,15 +80,14 @@ const useModal = () => {
   };
 };
 
+
 const itemsAPI = {
   delete: async (itemKey) => {
-    // Simulate API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(`Deleting item: ${itemKey}`);
-        resolve();
-      }, 1000);
-    });
+    // Delete item from Firestore
+    await deleteDoc(doc(db, 'items_list', itemKey));
+    // Optionally, delete associated bid
+    await deleteDoc(doc(db, 'bids', itemKey));
+    // Optionally, delete history subcollection (not implemented here)
   }
 };
 
@@ -481,16 +495,16 @@ const Dashboard = () => {
           </div>
           
           {!foldedSections.withBids && (
-            <div style={{ overflowX: 'auto', border: '1px solid #dee2e6', borderRadius: '8px' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <div style={{ overflowX: 'auto', border: '1.5px solid #D4AF37', borderRadius: '14px', background: '#fff' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '1rem' }}>
                 <thead>
-                  <tr style={{ backgroundColor: '#f8f9fa' }}>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Item #</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Name</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Sponsor</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Current Bid</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Bidder</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Actions</th>
+                  <tr style={{ backgroundColor: '#132d7ac9', color: '#D4AF37' }}>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Item #</th>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Name</th>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Sponsor</th>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Current Bid</th>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Bidder</th>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -512,19 +526,13 @@ const Dashboard = () => {
                     filteredWithBids.map(([key, item]) => {
                       const bid = bids[key];
                       return (
-                        <tr key={key} style={{ borderBottom: '1px solid #dee2e6' }}>
-                          <td style={{ padding: '12px' }}>
-                            <span style={{ fontWeight: 'bold' }}>#{item.item_no || '?'}</span>
-                          </td>
-                          <td style={{ padding: '12px' }}>{item.name || key}</td>
-                          <td style={{ padding: '12px' }}>{item.sponsor || 'No sponsor'}</td>
-                          <td style={{ padding: '12px' }}>
-                            <span style={{ fontWeight: 'bold', color: '#28a745' }}>
-                              {formatNumber(bid?.bid || 0)}
-                            </span>
-                          </td>
-                          <td style={{ padding: '12px' }}>{bid?.bidder || '-'}</td>
-                          <td style={{ padding: '12px' }}>
+                        <tr key={key} style={{ borderBottom: '1px solid #f3e6c6' }}>
+                          <td style={{ padding: '14px', color: '#DAA520', fontWeight: 700 }}>#{item.item_no || '?'}</td>
+                          <td style={{ padding: '14px', color: '#132c7a', fontWeight: 600 }}>{item.name || key}</td>
+                          <td style={{ padding: '14px', color: '#9d8042' }}>{item.sponsor || 'No sponsor'}</td>
+                          <td style={{ padding: '14px', color: '#28a745', fontWeight: 700 }}>{formatNumber(bid?.bid || 0)}</td>
+                          <td style={{ padding: '14px', color: '#132c7a' }}>{bid?.bidder || '-'}</td>
+                          <td style={{ padding: '14px' }}>
                             <ActionButtons itemKey={key} itemName={item.name} />
                           </td>
                         </tr>
@@ -562,15 +570,15 @@ const Dashboard = () => {
           </div>
           
           {!foldedSections.withoutBids && (
-            <div style={{ overflowX: 'auto', border: '1px solid #dee2e6', borderRadius: '8px' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <div style={{ overflowX: 'auto', border: '1.5px solid #D4AF37', borderRadius: '14px', background: '#fff' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '1rem' }}>
                 <thead>
-                  <tr style={{ backgroundColor: '#f8f9fa' }}>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Item #</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Name</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Sponsor</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Description</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #dee2e6' }}>Actions</th>
+                  <tr style={{ backgroundColor: '#132d7ac9', color: '#D4AF37' }}>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Item #</th>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Name</th>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Sponsor</th>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Description</th>
+                    <th style={{ padding: '14px', textAlign: 'left', borderBottom: '2px solid #D4AF37' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -590,16 +598,12 @@ const Dashboard = () => {
                     </tr>
                   ) : (
                     filteredWithoutBids.map(([key, item]) => (
-                      <tr key={key} style={{ borderBottom: '1px solid #dee2e6' }}>
-                        <td style={{ padding: '12px' }}>
-                          <span style={{ fontWeight: 'bold' }}>#{item.item_no || '?'}</span>
-                        </td>
-                        <td style={{ padding: '12px' }}>{item.name || key}</td>
-                        <td style={{ padding: '12px' }}>{item.sponsor || 'No sponsor'}</td>
-                        <td style={{ padding: '12px', maxWidth: '300px' }}>
-                          {item.description || 'No description available.'}
-                        </td>
-                        <td style={{ padding: '12px' }}>
+                      <tr key={key} style={{ borderBottom: '1px solid #f3e6c6' }}>
+                        <td style={{ padding: '14px', color: '#DAA520', fontWeight: 700 }}>#{item.item_no || '?'}</td>
+                        <td style={{ padding: '14px', color: '#132c7a', fontWeight: 600 }}>{item.name || key}</td>
+                        <td style={{ padding: '14px', color: '#9d8042' }}>{item.sponsor || 'No sponsor'}</td>
+                        <td style={{ padding: '14px', maxWidth: '300px', color: '#9d8042' }}>{item.description || 'No description available.'}</td>
+                        <td style={{ padding: '14px' }}>
                           <ActionButtons itemKey={key} itemName={item.name} />
                         </td>
                       </tr>

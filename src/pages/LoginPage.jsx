@@ -61,15 +61,40 @@ export default function Login() {
 
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center relative">
-
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-md px-4">
-        <h1 className="font-serif text-3xl text-yellow-400 text-center bg-blue-900/70 bg-opacity-80 py-3 px-6 rounded-lg mb-8 shadow-lg">
+    <div style={{ minHeight: '100vh', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+      <div className="auction-card" style={{
+        width: '100%',
+        maxWidth: 440,
+        margin: '2.5rem auto',
+        padding: '2.5rem 2rem 2rem 2rem',
+        boxShadow: '0 4px 32px 0 rgba(212,175,55,0.13)',
+        border: '2px solid #D4AF37',
+        borderRadius: 18,
+        background: 'rgba(255,255,255,0.98)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        {/* Optional logo area */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}>
+          <img src="/logo-auction.png" alt="Auction Logo" style={{ height: 54, marginBottom: 0, filter: 'drop-shadow(0 2px 6px #D4AF37AA)' }} onError={e => { e.target.style.display = 'none'; }} />
+        </div>
+        <h1 style={{
+          fontFamily: 'Playfair Display, serif',
+          fontSize: '2.1rem',
+          color: '#D4AF37',
+          textAlign: 'center',
+          background: '#132d7a',
+          borderRadius: 10,
+          padding: '0.9rem 1.2rem',
+          marginBottom: '2rem',
+          fontWeight: 800,
+          letterSpacing: '0.01em',
+          boxShadow: '0 2px 12px #132d7a22',
+          border: '1.5px solid #D4AF37',
+        }}>
           Hand in Hand Bangkok Silent Auction
         </h1>
-        
-        <div className="flex flex-col w-full text-black bg-yellow-100/90 bg-opacity-90 p-6 rounded-xl shadow-2xl space-y-4">
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <input
             type="text"
             name="name"
@@ -77,9 +102,9 @@ export default function Login() {
             onChange={handleInputChange}
             placeholder="Your Name"
             required
-            className="p-3 border-none rounded-lg text-lg bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all"
+            className="auction-input"
+            style={{ fontSize: '1.13rem', padding: '1rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
           />
-          
           <input
             type="email"
             name="email"
@@ -87,9 +112,9 @@ export default function Login() {
             onChange={handleInputChange}
             placeholder="Email Address"
             required
-            className="p-3 border-none rounded-lg text-lg bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all"
+            className="auction-input"
+            style={{ fontSize: '1.13rem', padding: '1rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
           />
-          
           <input
             type="tel"
             name="phone"
@@ -98,17 +123,31 @@ export default function Login() {
             placeholder="Phone Number"
             required
             minLength="10"
-            className="p-3 border-none rounded-lg text-lg bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all"
+            className="auction-input"
+            style={{ fontSize: '1.13rem', padding: '1rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
           />
-          
           <button
-            onClick={handleSubmit}
+            type="submit"
             disabled={isSubmitting}
-            className="p-3 bg-yellow-500 hover:bg-yellow-600 text-blue-900 rounded-lg text-lg font-bold cursor-pointer transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+            className="auction-btn auction-btn-gold"
+            style={{
+              fontSize: '1.13rem',
+              fontWeight: 800,
+              borderRadius: 10,
+              padding: '1rem',
+              marginTop: '0.5rem',
+              boxShadow: '0 2px 10px #D4AF3722',
+              letterSpacing: '0.01em',
+              transition: 'background 0.2s, box-shadow 0.2s, transform 0.1s',
+              background: isSubmitting ? '#D4AF37AA' : '#D4AF37',
+              color: '#132d7a',
+              cursor: isSubmitting ? 'not-allowed' : 'pointer',
+              transform: isSubmitting ? 'scale(1)' : 'scale(1.01)',
+            }}
           >
             {isSubmitting ? 'Registering...' : 'Enter Bidding Room'}
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
