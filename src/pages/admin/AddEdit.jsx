@@ -20,7 +20,10 @@ const AddEdit = () => {
     sponsor: '',
     value: '',
     starting_bid: '',
-    bid_increment: '500'
+    bid_increment: '500',
+    picture1: '',
+    picture2: '',
+    picture3: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -44,7 +47,10 @@ const AddEdit = () => {
             sponsor: data.sponsor || '',
             value: data.value?.toString() || '',
             starting_bid: data.starting_bid?.toString() || '',
-            bid_increment: data.bid_increment?.toString() || '500'
+            bid_increment: data.bid_increment?.toString() || '500',
+            picture1: data.picture1 || '',
+            picture2: data.picture2 || '',
+            picture3: data.picture3 || ''
           });
         } else {
           alert('Item not found');
@@ -130,6 +136,9 @@ const AddEdit = () => {
         value: formData.value ? parseFloat(formData.value) : null,
         starting_bid: formData.starting_bid ? parseFloat(formData.starting_bid) : null,
         bid_increment: parseInt(formData.bid_increment),
+        picture1: formData.picture1.trim() || '',
+        picture2: formData.picture2.trim() || '',
+        picture3: formData.picture3.trim() || '',
         updated_at: new Date()
       };
 
@@ -259,6 +268,46 @@ const AddEdit = () => {
             {errors.description && (
               <div className="auction-input-error-text" style={{ textAlign: 'left' }}>{errors.description}</div>
             )}
+          </div>
+          {/* Image URLs */}
+          <div style={{ marginBottom: '1.2rem' }}>
+            <label style={{ fontWeight: 600, color: '#132d7a', marginBottom: 4, display: 'block', textAlign: 'left' }}>Picture 1 URL</label>
+            <input
+              type="text"
+              name="picture1"
+              value={formData.picture1}
+              onChange={handleInputChange}
+              className="auction-input"
+              placeholder="Enter image URL (e.g., https://example.com/image1.jpg)"
+              autoComplete="off"
+              style={{ width: '100%', textAlign: 'left' }}
+            />
+          </div>
+          <div style={{ marginBottom: '1.2rem' }}>
+            <label style={{ fontWeight: 600, color: '#132d7a', marginBottom: 4, display: 'block', textAlign: 'left' }}>Picture 2 URL (Optional)</label>
+            <input
+              type="text"
+              name="picture2"
+              value={formData.picture2}
+              onChange={handleInputChange}
+              className="auction-input"
+              placeholder="Enter image URL"
+              autoComplete="off"
+              style={{ width: '100%', textAlign: 'left' }}
+            />
+          </div>
+          <div style={{ marginBottom: '1.2rem' }}>
+            <label style={{ fontWeight: 600, color: '#132d7a', marginBottom: 4, display: 'block', textAlign: 'left' }}>Picture 3 URL (Optional)</label>
+            <input
+              type="text"
+              name="picture3"
+              value={formData.picture3}
+              onChange={handleInputChange}
+              className="auction-input"
+              placeholder="Enter image URL"
+              autoComplete="off"
+              style={{ width: '100%', textAlign: 'left' }}
+            />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.2rem', marginBottom: '1.5rem' }}>
             {/* Value */}
