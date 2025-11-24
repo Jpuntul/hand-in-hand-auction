@@ -77,6 +77,70 @@ h1, h2, h3, h4, h5, h6 {
   color: #DAA520;
   font-weight: bold;
 }
+
+/* Error States */
+.auction-input-error {
+  border: 2px solid #dc3545 !important;
+}
+
+.auction-input-error:focus {
+  border: 2px solid #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.auction-input-error-text {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* Button Variants */
+.auction-btn-gold {
+  background-color: #D4AF37;
+  color: #132c7a;
+}
+
+.auction-btn-gold:hover {
+  background-color: #b48e2e;
+  color: #fff;
+}
+
+.auction-btn-blue {
+  background-color: #132c7a;
+  color: #D4AF37;
+}
+
+.auction-btn-blue:hover {
+  background-color: #0d1f54;
+  color: #fff;
+}
+
+.auction-btn-green {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.auction-btn-green:hover {
+  background-color: #218838;
+  color: #fff;
+}
+
+.auction-btn-gray {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.auction-btn-gray:hover {
+  background-color: #5a6268;
+  color: #fff;
+}
+
+.auction-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 @import "tailwindcss";
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
