@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, addDoc, onSnapshot, doc } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import BackgroundImg from '../assets/background.jpg';
 
 const BiddingRoom = () => {
@@ -104,22 +104,44 @@ const BiddingRoom = () => {
   const confirmBid = async () => {
     if (!confirmModal.item) return;
 
-    // Firebase bid submission logic would go here
-    // await submitBidToFirebase(confirmModal.item.key, confirmModal.amount);
-    
-    // Add to watchlist
-    let storedItems = JSON.parse(localStorage.getItem('watchlistItems')) || [];
-    if (!storedItems.includes(confirmModal.item.key)) {
-      storedItems.push(confirmModal.item.key);
-      localStorage.setItem('watchlistItems', JSON.stringify(storedItems));
-    }
+    try {
+      const { key: itemKey } = confirmModal.item;
+      const amount = confirmModal.amount;
 
-    setConfirmModal({ show: false, item: null, amount: 0 });
-    setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 2000);
-    
-    // Refresh data
-    // fetchAndRenderItems();
+      // Submit bid to Firestore
+      await setDoc(doc(db, 'bids', itemKey), {
+        bid: amount,
+        bidder: userInfo.name,
+        email: userInfo.email,
+        phone: userInfo.phone || '',
+        timestamp: Date.now(),
+      });
+
+      // Add to history subcollection
+      await addDoc(collection(db, 'history', itemKey, 'entries'), {
+        bid: amount,
+        bidder: userInfo.name,
+        email: userInfo.email,
+        phone: userInfo.phone || '',
+        timestamp: Date.now(),
+      });
+
+      // Add to watchlist
+      let storedItems = JSON.parse(localStorage.getItem('watchlistItems')) || [];
+      if (!storedItems.includes(itemKey)) {
+        storedItems.push(itemKey);
+        localStorage.setItem('watchlistItems', JSON.stringify(storedItems));
+      }
+
+      setConfirmModal({ show: false, item: null, amount: 0 });
+      setBidInputs(prev => ({ ...prev, [itemKey]: '' }));
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 2000);
+    } catch (error) {
+      console.error('Error submitting bid:', error);
+      alert('Failed to submit bid. Please try again.');
+      setConfirmModal({ show: false, item: null, amount: 0 });
+    }
   };
 
   const cancelBid = () => {
