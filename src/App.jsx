@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/LoginPage';
 import BiddingRoom from './pages/BiddingRoomPage';
 import HistoryPage from './pages/HistoryPage';
+import WatchlistPage from './pages/WatchlistPage';
 import Dashboard from './pages/admin/Dashboard';
 import AddEdit from './pages/admin/AddEdit';
 import './App.css'
@@ -12,8 +13,10 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/bidding" element={<BiddingRoom />} />
         <Route path="/bidding-room" element={<BiddingRoom />} />
         <Route path="/history" element={<HistoryPage />} />
+        <Route path="/watchlist" element={<WatchlistPage />} />
         <Route path="/admin" element={<Dashboard />} />
         <Route path="/admin/add-edit" element={<AddEdit />} />
       </Routes>
