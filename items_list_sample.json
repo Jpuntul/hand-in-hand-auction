@@ -1,0 +1,112 @@
+[
+  {
+    "item_no": 1,
+    "name": "Handcrafted Teak Bowl",
+    "description": "A beautiful bowl made from sustainable Thai teak wood, perfect for salads or display.",
+    "value": 1200,
+    "starting_bid": 500,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/teak-bowl-1.jpg",
+    "picture2": "https://example.com/images/teak-bowl-2.jpg",
+    "picture3": "https://example.com/images/teak-bowl-3.jpg"
+  },
+  {
+    "item_no": 2,
+    "name": "Traditional Myanmar Painting",
+    "description": "Original artwork by a Myanmar artist, capturing the vibrant culture and landscapes.",
+    "value": 3000,
+    "starting_bid": 1000,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/myanmar-painting-1.jpg",
+    "picture2": "https://example.com/images/myanmar-painting-2.jpg",
+    "picture3": ""
+  },
+  {
+    "item_no": 3,
+    "name": "Silk Scarf from Chiang Mai",
+    "description": "Handwoven silk scarf in traditional patterns, soft and elegant.",
+    "value": 800,
+    "starting_bid": 400,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/silk-scarf-1.jpg",
+    "picture2": "",
+    "picture3": ""
+  },
+  {
+    "item_no": 4,
+    "name": "Coffee Gift Basket",
+    "description": "A selection of premium Thai and Myanmar coffee beans, with a French press included.",
+    "value": 1500,
+    "starting_bid": 700,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/coffee-basket-1.jpg",
+    "picture2": "https://example.com/images/coffee-basket-2.jpg",
+    "picture3": ""
+  },
+  {
+    "item_no": 5,
+    "name": "Bamboo Picnic Set",
+    "description": "Eco-friendly picnic set with bamboo plates, cups, and utensils for four.",
+    "value": 1000,
+    "starting_bid": 500,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/bamboo-picnic-1.jpg",
+    "picture2": "",
+    "picture3": ""
+  },
+  {
+    "item_no": 6,
+    "name": "Handmade Pottery Vase",
+    "description": "Unique vase crafted by local artisans, glazed in earthy tones.",
+    "value": 900,
+    "starting_bid": 400,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/pottery-vase-1.jpg",
+    "picture2": "https://example.com/images/pottery-vase-2.jpg",
+    "picture3": ""
+  },
+  {
+    "item_no": 7,
+    "name": "Cooking Class Voucher",
+    "description": "Voucher for a Thai or Myanmar cooking class for two people, includes all ingredients.",
+    "value": 2500,
+    "starting_bid": 1200,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/cooking-class-1.jpg",
+    "picture2": "",
+    "picture3": ""
+  },
+  {
+    "item_no": 8,
+    "name": "Spa Day Package",
+    "description": "Relaxing spa day at a top Bangkok spa, includes massage and facial.",
+    "value": 3500,
+    "starting_bid": 1500,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/spa-day-1.jpg",
+    "picture2": "https://example.com/images/spa-day-2.jpg",
+    "picture3": ""
+  },
+  {
+    "item_no": 9,
+    "name": "Hand-stitched Quilt",
+    "description": "Colorful quilt made by a women's cooperative in Myanmar, queen size.",
+    "value": 4000,
+    "starting_bid": 2000,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/quilt-1.jpg",
+    "picture2": "https://example.com/images/quilt-2.jpg",
+    "picture3": ""
+  },
+  {
+    "item_no": 10,
+    "name": "Private River Cruise",
+    "description": "Two-hour private boat cruise on the Chao Phraya River for up to 6 people.",
+    "value": 6000,
+    "starting_bid": 3000,
+    "bid_increment": 500,
+    "picture1": "https://example.com/images/river-cruise-1.jpg",
+    "picture2": "https://example.com/images/river-cruise-2.jpg",
+    "picture3": ""
+  }
+]
