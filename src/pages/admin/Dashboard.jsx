@@ -322,7 +322,7 @@ const Dashboard = () => {
         Delete
       </button>
       <Link 
-        to={`/admin/history/${itemKey}`}
+        to={`/admin/item-history?id=${itemKey}`}
         style={{
           padding: '4px 8px',
           backgroundColor: '#28a745',

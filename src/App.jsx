@@ -5,6 +5,7 @@ import HistoryPage from './pages/HistoryPage';
 import WatchlistPage from './pages/WatchlistPage';
 import Dashboard from './pages/admin/Dashboard';
 import AddEdit from './pages/admin/AddEdit';
+import ItemHistory from './pages/admin/ItemHistory';
 import './App.css'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/watchlist" element={<WatchlistPage />} />
         <Route path="/admin" element={<Dashboard />} />
         <Route path="/admin/add-edit" element={<AddEdit />} />
+        <Route path="/admin/item-history" element={<ItemHistory />} />
       </Routes>
     </Router>
   )
