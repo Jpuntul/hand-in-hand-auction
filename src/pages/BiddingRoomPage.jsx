@@ -222,16 +222,18 @@ const BiddingRoom = () => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        padding: '1rem',
-        paddingTop: '4.5rem'
+        padding: '0.75rem 0.5rem',
+        paddingTop: '3rem'
       }}>
         <button
           onClick={handleLogout}
-          className="absolute top-4 left-4 font-bold cursor-pointer z-50 px-4 py-2 rounded-lg"
+          className="absolute top-2 left-2 font-bold cursor-pointer z-50 rounded-lg"
           style={{
             backgroundColor: '#daa520ae',
             color: '#122c7a',
-            border: 'none'
+            border: 'none',
+            padding: '8px 12px',
+            fontSize: '0.85rem'
           }}
         >
           Logout
@@ -239,109 +241,138 @@ const BiddingRoom = () => {
         
         <button
           onClick={handleWatchlist}
-          className="absolute top-4 right-4 font-bold cursor-pointer z-50 px-4 py-2 rounded-lg"
+          className="absolute top-2 right-2 font-bold cursor-pointer z-50 rounded-lg"
           style={{
             backgroundColor: '#daa520ae',
             color: '#122c7a',
-            border: 'none'
+            border: 'none',
+            padding: '8px 12px',
+            fontSize: '0.85rem'
           }}
         >
-          Item Watchlist
+          Watchlist
         </button>
 
-        <h1 className="mt-1 text-2xl font-serif" style={{
+        <h1 className="mt-0 font-serif" style={{
           fontFamily: "'Playfair Display', serif",
-          color: '#DAA520'
+          color: '#DAA520',
+          fontSize: '1.25rem',
+          lineHeight: '1.3'
         }}>
           <div>Hand in Hand for Myanmar</div>
           <div>Bidding Room</div>
         </h1>
         
         {userInfo && (
-          <p className="text-base mb-4 font-bold" style={{ color: '#DAA520' }}>
+          <p className="mb-2 font-bold" style={{ 
+            color: '#DAA520',
+            fontSize: '0.85rem'
+          }}>
             Welcome, {userInfo.name}!
           </p>
         )}
         
         <input
           type="text"
-          placeholder="Search items by name, number, description, or sponsor..."
+          placeholder="Search items..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="auction-input w-full max-w-lg mx-auto block text-base shadow-lg mb-3"
-          style={{ backgroundColor: '#3a5fcfb8', color: '#daa520ae', boxShadow: '0 0 5px rgba(212, 175, 55, 0.2)' }}
+          className="auction-input w-full max-w-lg mx-auto block shadow-lg mb-2"
+          style={{ 
+            backgroundColor: '#3a5fcfb8', 
+            color: '#daa520ae', 
+            boxShadow: '0 0 5px rgba(212, 175, 55, 0.2)',
+            fontSize: '0.9rem',
+            padding: '8px 10px',
+            marginBottom: '8px'
+          }}
         />
 
-        {/* Filter Controls */}
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
-          {/* Sort By */}
-          <div>
-            <label className="block text-sm font-semibold mb-1" style={{ color: '#DAA520' }}>
-              Sort By:
-            </label>
+        {/* Filter Controls - Single Row on Mobile */}
+        <div className="max-w-4xl mx-auto px-2" style={{ fontSize: '0.75rem' }}>
+          <div className="flex gap-1 md:grid md:grid-cols-3 md:gap-2">
+            {/* Sort By */}
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="auction-input w-full text-base"
-              style={{ backgroundColor: '#3a5fcfb8', color: '#FAF3E0' }}
+              className="auction-input"
+              style={{ 
+                backgroundColor: '#3a5fcfb8', 
+                color: '#FAF3E0',
+                fontSize: '0.75rem',
+                padding: '5px 4px',
+                flex: '1 1 0',
+                minWidth: '0'
+              }}
             >
-              <option value="item_no">Item Number</option>
-              <option value="highest_bid">Highest Bid</option>
-              <option value="name">Name (A-Z)</option>
+              <option value="item_no">Item #</option>
+              <option value="highest_bid">High Bid</option>
+              <option value="name">Name</option>
             </select>
-          </div>
 
-          {/* Bid Status Filter */}
-          <div>
-            <label className="block text-sm font-semibold mb-1" style={{ color: '#DAA520' }}>
-              Bid Status:
-            </label>
+            {/* Bid Status Filter */}
             <select
               value={filterBidStatus}
               onChange={(e) => setFilterBidStatus(e.target.value)}
-              className="auction-input w-full text-base"
-              style={{ backgroundColor: '#3a5fcfb8', color: '#FAF3E0' }}
+              className="auction-input"
+              style={{ 
+                backgroundColor: '#3a5fcfb8', 
+                color: '#FAF3E0',
+                fontSize: '0.75rem',
+                padding: '5px 4px',
+                flex: '1 1 0',
+                minWidth: '0'
+              }}
             >
-              <option value="all">All Items</option>
-              <option value="with_bids">With Bids</option>
-              <option value="without_bids">No Bids Yet</option>
+              <option value="all">All</option>
+              <option value="with_bids">w/ Bids</option>
+              <option value="without_bids">No Bids</option>
             </select>
-          </div>
 
-          {/* Price Range */}
-          <div>
-            <label className="block text-sm font-semibold mb-1" style={{ color: '#DAA520' }}>
-              Price Range (THB):
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="number"
-                placeholder="Min"
-                value={priceRange.min}
-                onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
-                className="auction-input w-1/2 text-base"
-                style={{ backgroundColor: '#3a5fcfb8', color: '#FAF3E0' }}
-              />
-              <input
-                type="number"
-                placeholder="Max"
-                value={priceRange.max}
-                onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
-                className="auction-input w-1/2 text-base"
-                style={{ backgroundColor: '#3a5fcfb8', color: '#FAF3E0' }}
-              />
-            </div>
+            {/* Price Range - Min */}
+            <input
+              type="number"
+              placeholder="Min"
+              value={priceRange.min}
+              onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
+              className="auction-input"
+              style={{ 
+                backgroundColor: '#3a5fcfb8', 
+                color: '#FAF3E0',
+                fontSize: '0.75rem',
+                padding: '5px 4px',
+                flex: '0.5 1 0',
+                minWidth: '0'
+              }}
+            />
+            
+            {/* Price Range - Max */}
+            <input
+              type="number"
+              placeholder="Max"
+              value={priceRange.max}
+              onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
+              className="auction-input"
+              style={{ 
+                backgroundColor: '#3a5fcfb8', 
+                color: '#FAF3E0',
+                fontSize: '0.75rem',
+                padding: '5px 4px',
+                flex: '0.5 1 0',
+                minWidth: '0'
+              }}
+            />
           </div>
         </div>
 
-        {/* Results Count */}
-        <p className="text-sm mt-3" style={{ color: '#9d8042' }}>
-          Showing {sortedItems.length} of {Object.keys(items).length} items
+        {/* Results Count - Compact */}
+        <p className="text-xs mt-2" style={{ color: '#9d8042' }}>
+          {sortedItems.length} of {Object.keys(items).length} items
         </p>
       </div>
 
       {/* Item List */}
-      <div className="pt-72 pb-8">
+      <div style={{ paddingTop: '240px', paddingBottom: '2rem' }}>
         {sortedItems.map(([key, item]) => {
           const bidInfo = bids[key] || {};
           const bid = bidInfo.bid ? formatNumber(bidInfo.bid) : '-';
