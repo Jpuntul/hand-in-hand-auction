@@ -122,13 +122,22 @@ const HistoryPage = () => {
     const increment = 500;
     const minAllowed = Math.max(startingBid, currentBid + increment);
     if (amount < minAllowed) {
-      alert(`Minimum next bid is THB ${formatNumber(minAllowed)} (Current: THB ${formatNumber(currentBid)} + Increment: THB ${formatNumber(increment)})`);
+      alert(`Minimum next bid is THB ${formatNumber(minAllowed)}\n\nCurrent highest bid: THB ${formatNumber(currentBid)}\nRequired increment: THB ${formatNumber(increment)}\n\nClick "Suggest Bid" to auto-fill the minimum amount.`);
       return;
     }
     const itemName = itemData?.name || itemKey;
     setPendingBid({ itemKey, amount, itemName });
     setModalText(`Confirm your bid of THB ${formatNumber(amount)} for "${itemName}"?`);
     setModalVisible(true);
+  };
+
+  const handleSuggestBid = async () => {
+    const startingBid = itemData?.starting_bid || 0;
+    const bidDoc = await getDoc(doc(db, 'bids', itemKey));
+    const currentBid = bidDoc.exists() ? (bidDoc.data().bid || 0) : 0;
+    const increment = 500;
+    const minAllowed = Math.max(startingBid, currentBid + increment);
+    setBidAmount(minAllowed.toString());
   };
 
   const handleConfirmYes = async () => {
@@ -222,6 +231,23 @@ const HistoryPage = () => {
               className="auction-input flex-1"
               style={{ fontSize: '1.1rem', padding: '0.9rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
             />
+            <button 
+              onClick={handleSuggestBid}
+              className="auction-btn" 
+              style={{ 
+                fontSize: '1rem', 
+                fontWeight: 700, 
+                borderRadius: 10, 
+                padding: '0.9rem 1rem', 
+                backgroundColor: '#132d7a',
+                color: '#D4AF37',
+                boxShadow: '0 2px 10px #D4AF3722', 
+                letterSpacing: '0.01em',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              Suggest Bid
+            </button>
             <button id="submit-btn" onClick={handleBidClick} className="auction-btn auction-btn-gold" style={{ fontSize: '1.1rem', fontWeight: 700, borderRadius: 10, padding: '0.9rem 1.5rem', boxShadow: '0 2px 10px #D4AF3722', letterSpacing: '0.01em' }}>
               Submit Bid
             </button>

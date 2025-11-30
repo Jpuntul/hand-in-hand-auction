@@ -79,6 +79,12 @@ const BiddingRoom = () => {
     }));
   };
 
+  const getSuggestedBid = (itemKey) => {
+    const currentBid = bids[itemKey]?.bid || 0;
+    const increment = items[itemKey]?.bid_increment || 500;
+    return currentBid + increment;
+  };
+
   const handleSubmitBid = async (itemKey) => {
     const amount = parseInt(bidInputs[itemKey]);
     if (!amount || amount < 1) {
@@ -92,7 +98,7 @@ const BiddingRoom = () => {
     const minAllowed = currentBid + increment;
 
     if (amount < minAllowed) {
-      alert(`Minimum next bid is THB ${formatNumber(minAllowed)} (Current: THB ${formatNumber(currentBid)} + Increment: THB ${formatNumber(increment)})`);
+      alert(`Minimum next bid is THB ${formatNumber(minAllowed)}\n\nCurrent highest bid: THB ${formatNumber(currentBid)}\nRequired increment: THB ${formatNumber(increment)}\n\nClick "Suggest Bid" to auto-fill the minimum amount.`);
       return;
     }
 
@@ -371,6 +377,9 @@ const BiddingRoom = () => {
               <p style={{ color: '#9d8042' }} className='text-left'>
                 <strong>Bidder:</strong> {bidder}
               </p>
+              <p style={{ color: '#D4AF37', fontWeight: 'bold', fontSize: '0.95rem' }} className='text-left'>
+                ⚡ Minimum Next Bid: THB {formatNumber((bids[key]?.bid || 0) + (item.bid_increment || 500))}
+              </p>
               
               <div className="flex gap-2 mt-2 mb-2">
                 <input
@@ -380,6 +389,16 @@ const BiddingRoom = () => {
                   onChange={(e) => handleBidInputChange(key, e.target.value)}
                   className="auction-input flex-1 text-base"
                 />
+                <button
+                  onClick={() => {
+                    const suggestedBid = getSuggestedBid(key);
+                    handleBidInputChange(key, suggestedBid.toString());
+                  }}
+                  className="auction-btn-gold px-3 py-2 whitespace-nowrap text-sm"
+                  title="Auto-fill minimum bid"
+                >
+                  Suggest Bid
+                </button>
                 <button
                   onClick={() => handleSubmitBid(key)}
                   className="auction-btn px-4 py-2 whitespace-nowrap"
