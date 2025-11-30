@@ -349,26 +349,27 @@ const Dashboard = () => {
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ padding: '0.5rem', maxWidth: '1200px', margin: '0 auto' }}>
       {/* Top Bar */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        marginBottom: '20px',
+        marginBottom: '15px',
         flexWrap: 'wrap',
         gap: '10px'
       }}>
-        <h1 style={{ margin: 0 }}>Admin Dashboard - Table View</h1>
+        <h1 style={{ margin: 0, fontSize: 'clamp(1.3rem, 4vw, 1.75rem)' }}>Admin Dashboard</h1>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
           <Link 
             to="/admin/add-edit" 
             style={{
-              padding: '8px 16px',
+              padding: '6px 12px',
               backgroundColor: '#28a745',
               color: 'white',
               textDecoration: 'none',
-              borderRadius: '4px'
+              borderRadius: '4px',
+              fontSize: 'clamp(0.85rem, 2vw, 1rem)'
             }}
           >
             Add Items
@@ -379,10 +380,11 @@ const Dashboard = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search items..."
             style={{
-              padding: '8px',
+              padding: '6px 8px',
               border: '1px solid #ccc',
               borderRadius: '4px',
-              minWidth: '200px'
+              minWidth: '150px',
+              fontSize: 'clamp(0.85rem, 2vw, 1rem)'
             }}
           />
         </div>
@@ -391,9 +393,9 @@ const Dashboard = () => {
       {/* Statistics */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '15px',
-        marginBottom: '30px'
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        gap: '10px',
+        marginBottom: '20px'
       }}>
         <div style={{
           padding: '20px',

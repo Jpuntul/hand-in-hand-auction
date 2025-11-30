@@ -61,12 +61,12 @@ export default function Login() {
 
 
   return (
-    <div style={{ minHeight: '100vh', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+    <div style={{ minHeight: '100vh', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
       <div className="auction-card" style={{
         width: '100%',
         maxWidth: 440,
-        margin: '2.5rem auto',
-        padding: '2.5rem 2rem 2rem 2rem',
+        margin: '1rem auto',
+        padding: '1.5rem 1rem',
         boxShadow: '0 4px 32px 0 rgba(212,175,55,0.13)',
         border: '2px solid #D4AF37',
         borderRadius: 18,
@@ -80,13 +80,13 @@ export default function Login() {
         </div>
         <h1 style={{
           fontFamily: 'Playfair Display, serif',
-          fontSize: '2.1rem',
+          fontSize: 'clamp(1.3rem, 5vw, 2.1rem)',
           color: '#D4AF37',
           textAlign: 'center',
           background: '#132d7a',
           borderRadius: 10,
-          padding: '0.9rem 1.2rem',
-          marginBottom: '2rem',
+          padding: '0.7rem 1rem',
+          marginBottom: '1.5rem',
           fontWeight: 800,
           letterSpacing: '0.01em',
           boxShadow: '0 2px 12px #132d7a22',
@@ -94,7 +94,7 @@ export default function Login() {
         }}>
           Hand in Hand Bangkok Silent Auction
         </h1>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <input
             type="text"
             name="name"
@@ -103,7 +103,7 @@ export default function Login() {
             placeholder="Your Name"
             required
             className="auction-input"
-            style={{ fontSize: '1.13rem', padding: '1rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
+            style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.13rem)', padding: '0.85rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
           />
           <input
             type="email"
@@ -113,7 +113,7 @@ export default function Login() {
             placeholder="Email Address"
             required
             className="auction-input"
-            style={{ fontSize: '1.13rem', padding: '1rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
+            style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.13rem)', padding: '0.85rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
           />
           <input
             type="tel"
@@ -124,7 +124,7 @@ export default function Login() {
             required
             minLength="10"
             className="auction-input"
-            style={{ fontSize: '1.13rem', padding: '1rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
+            style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.13rem)', padding: '0.85rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
           />
           <button
             type="submit"

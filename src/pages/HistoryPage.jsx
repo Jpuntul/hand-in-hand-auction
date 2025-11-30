@@ -180,7 +180,7 @@ const HistoryPage = () => {
 
   return (
     <div style={{ minHeight: '100vh', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', color: '#9d8042', paddingBottom: '2rem' }}>
-      <div style={{ maxWidth: 900, margin: '1.5rem auto 0 auto', background: '#fff', borderRadius: 16, boxShadow: '0 4px 32px 0 rgba(212,175,55,0.10)', border: '2px solid #D4AF37', padding: '2rem 1.5rem 1.5rem 1.5rem' }}>
+      <div style={{ maxWidth: 900, margin: '0.5rem', background: '#fff', borderRadius: 16, boxShadow: '0 4px 32px 0 rgba(212,175,55,0.10)', border: '2px solid #D4AF37', padding: '1rem' }}>
         <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '0.5rem' }}>
           <Link to="/bidding" style={{
             fontWeight: 600,
@@ -195,7 +195,7 @@ const HistoryPage = () => {
             Bidding Room
           </Link>
         </div>
-        <h1 id="item-title" style={{ fontFamily: 'Playfair Display, serif', fontSize: '2rem', color: '#D4AF37', textAlign: 'center', background: '#132d7a', borderRadius: 10, padding: '0.9rem 1.2rem', marginBottom: '1.5rem', fontWeight: 800, letterSpacing: '0.01em', boxShadow: '0 2px 12px #132d7a22', border: '1.5px solid #D4AF37', maxWidth: 770, marginLeft: 'auto', marginRight: 'auto' }}>{itemData.name || 'Bid History'}</h1>
+        <h1 id="item-title" style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(1.3rem, 4vw, 2rem)', color: '#D4AF37', textAlign: 'center', background: '#132d7a', borderRadius: 10, padding: '0.7rem 1rem', marginBottom: '1rem', fontWeight: 800, letterSpacing: '0.01em', boxShadow: '0 2px 12px #132d7a22', border: '1.5px solid #D4AF37', maxWidth: 770, marginLeft: 'auto', marginRight: 'auto' }}>{itemData.name || 'Bid History'}</h1>
         <div id="main" style={{ padding: '0', margin: 0, maxWidth: 770, marginLeft: 'auto', marginRight: 'auto' }}>
           {/* Slideable images */}
           <div ref={imageWrapperRef} className="image-wrapper" id="image-wrapper" style={{ display: 'flex', gap: 16, marginBottom: 24, overflowX: 'auto', justifyContent: 'flex-start', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'thin', maxWidth: 770 }}>
@@ -216,7 +216,7 @@ const HistoryPage = () => {
               </>
             )}
           </div>
-          <div className="bid-row" style={{ display: 'flex', gap: '0.7rem', margin: '1.5rem auto', maxWidth: 770, padding: 0, alignItems: 'center' }}>
+          <div className="bid-row" style={{ display: 'flex', gap: '0.5rem', margin: '1rem auto', maxWidth: 770, padding: 0, alignItems: 'center', flexWrap: 'wrap' }}>
             <input
               ref={inputRef}
               id="bid-input"
@@ -226,16 +226,16 @@ const HistoryPage = () => {
               value={bidAmount}
               onChange={e => setBidAmount(e.target.value)}
               className="auction-input flex-1"
-              style={{ fontSize: '1.1rem', padding: '0.9rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722' }}
+              style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', padding: '0.7rem', borderRadius: 10, border: '1.5px solid #D4AF37', background: '#fffbe6', boxShadow: '0 1px 6px #D4AF3722', minWidth: '120px' }}
             />
             <button 
               onClick={handleSuggestBid}
               className="auction-btn" 
               style={{ 
-                fontSize: '1rem', 
+                fontSize: 'clamp(0.85rem, 2vw, 1rem)', 
                 fontWeight: 700, 
                 borderRadius: 10, 
-                padding: '0.9rem 1rem', 
+                padding: '0.7rem 0.8rem', 
                 backgroundColor: '#132d7a',
                 color: '#D4AF37',
                 boxShadow: '0 2px 10px #D4AF3722', 
@@ -245,7 +245,7 @@ const HistoryPage = () => {
             >
               Suggest Bid
             </button>
-            <button id="submit-btn" onClick={handleBidClick} className="auction-btn auction-btn-gold" style={{ fontSize: '1.1rem', fontWeight: 700, borderRadius: 10, padding: '0.9rem 1.5rem', boxShadow: '0 2px 10px #D4AF3722', letterSpacing: '0.01em' }}>
+            <button id="submit-btn" onClick={handleBidClick} className="auction-btn auction-btn-gold" style={{ fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', fontWeight: 700, borderRadius: 10, padding: '0.7rem 1rem', boxShadow: '0 2px 10px #D4AF3722', letterSpacing: '0.01em' }}>
               Submit Bid
             </button>
           </div>

@@ -94,21 +94,15 @@ const WatchlistPage = () => {
   };
 
   if (loading) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="auction-card" style={{ textAlign: 'center', background: '#fbefd68f', border: '2px solid #D4AF37', borderRadius: 16, boxShadow: '0 4px 32px 0 rgba(212,175,55,0.10)', padding: '2.5rem 2rem' }}>
-          <p style={{ color: '#132d7a', fontWeight: 600 }}>Loading watchlist...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading watchlist..." size="large" />;
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', padding: '2rem 0' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto', background: '#fff', borderRadius: 16, boxShadow: '0 4px 32px 0 rgba(212,175,55,0.10)', border: '2px solid #D4AF37', padding: '2rem 1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '2px solid #D4AF37', paddingBottom: '1rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#D4AF37', margin: 0, letterSpacing: '0.01em', fontFamily: 'Playfair Display, serif' }}>My Watchlist</h1>
-          <button onClick={handleBackToBidding} className="auction-btn" style={{ fontWeight: 600, fontSize: '1rem', borderRadius: 8, padding: '0.6rem 1.2rem' }}>
+    <div style={{ minHeight: '100vh', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', padding: '0.5rem' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', background: '#fff', borderRadius: 16, boxShadow: '0 4px 32px 0 rgba(212,175,55,0.10)', border: '2px solid #D4AF37', padding: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '2px solid #D4AF37', paddingBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.3rem, 4vw, 2rem)', fontWeight: 800, color: '#D4AF37', margin: 0, letterSpacing: '0.01em', fontFamily: 'Playfair Display, serif' }}>My Watchlist</h1>
+          <button onClick={handleBackToBidding} className="auction-btn" style={{ fontWeight: 600, fontSize: 'clamp(0.85rem, 2vw, 1rem)', borderRadius: 8, padding: '0.5rem 1rem' }}>
             Back to Bidding Room
           </button>
         </div>

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const AddEdit = () => {
   const navigate = useNavigate();
@@ -170,33 +171,12 @@ const AddEdit = () => {
   };
 
   if (initialLoading) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="auction-card" style={{ textAlign: 'center', background: '#fbefd68f', border: '2px solid #D4AF37', borderRadius: 16, boxShadow: '0 4px 32px 0 rgba(212,175,55,0.10)', padding: '2.5rem 2rem' }}>
-          <div style={{
-            width: '50px',
-            height: '50px',
-            border: '3px solid #f3e6c6',
-            borderTop: '3px solid #132d7a',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto 20px'
-          }}></div>
-          <p style={{ color: '#132d7a', fontWeight: 600 }}>Loading item data...</p>
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading item data..." size="large" />;
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', padding: '2.5rem 0' }}>
-      <div className="auction-card" style={{ maxWidth: 700, margin: '0 auto', border: '2px solid #D4AF37', borderRadius: 18, boxShadow: '0 6px 32px 0 rgba(212,175,55,0.13)', padding: '2.5rem 2.2rem 2rem 2.2rem', background: '#fff', textAlign: 'left' }}>
+    <div style={{ minHeight: '100vh', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', padding: '1rem 0.5rem' }}>
+      <div className="auction-card" style={{ maxWidth: 700, margin: '0 auto', border: '2px solid #D4AF37', borderRadius: 18, boxShadow: '0 6px 32px 0 rgba(212,175,55,0.13)', padding: '1.5rem 1rem', background: '#fff', textAlign: 'left' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28, borderBottom: '2px solid #D4AF37', paddingBottom: 18, textAlign: 'left' }}>
           <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#D4AF37', margin: 0, letterSpacing: '0.01em', fontFamily: 'Playfair Display, serif', textAlign: 'left' }}>{isEditMode ? `Edit Item #${formData.item_no}` : 'Add New Item'}</h1>
           <button type="button" className="auction-btn auction-btn-gray" onClick={handleCancel} style={{ fontWeight: 600, fontSize: '1rem', borderRadius: 8, padding: '0.6rem 1.2rem' }}>Back to Dashboard</button>
