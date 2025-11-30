@@ -6,6 +6,7 @@ import BackgroundImg from '../../assets/background.jpg';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import Toast from '../../components/Toast/Toast';
 import { useToast } from '../../hooks/useToast';
+import { useAnalytics } from '../../hooks/useAnalytics';
 import './BiddingRoomPage.css';
 
 const BiddingRoom = () => {
@@ -21,6 +22,7 @@ const BiddingRoom = () => {
   const [bidInputs, setBidInputs] = useState({});
   const [loading, setLoading] = useState(true);
   const toast = useToast();
+  const analytics = useAnalytics();
 
   useEffect(() => {
     // Check user info from localStorage
@@ -74,6 +76,17 @@ const BiddingRoom = () => {
       unsubBids();
     };
   }, []);
+
+  // Track search queries with debounce
+  useEffect(() => {
+    if (!searchQuery) return;
+    
+    const timer = setTimeout(() => {
+      analytics.trackSearch(searchQuery);
+    }, 1000); // Track after 1 second of no typing
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, analytics]);
 
   const formatNumber = (num) => {
     return Number(num).toLocaleString('en-US');
@@ -156,6 +169,9 @@ const BiddingRoom = () => {
         storedItems.push(itemKey);
         localStorage.setItem('watchlistItems', JSON.stringify(storedItems));
       }
+
+      // Track bid activity for analytics
+      analytics.trackBidActivity(itemKey, amount);
 
       setConfirmModal({ show: false, item: null, amount: 0 });
       setBidInputs(prev => ({ ...prev, [itemKey]: '' }));

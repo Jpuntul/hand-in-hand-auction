@@ -1,0 +1,142 @@
+/* Analytics Dashboard Styles */
+
+.analytics-container {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.analytics-title {
+  font-family: 'Playfair Display', serif;
+  color: #DAA520;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.analytics-section {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.13);
+}
+
+.analytics-section h2 {
+  color: #DAA520;
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.analytics-table-container {
+  overflow-x: auto;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analytics-table th {
+  background: #132d7ac9;
+  color: #D4AF37;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid #D4AF37;
+}
+
+.analytics-table td {
+  padding: 0.75rem;
+  color: #9d8042;
+  border-bottom: 1px solid #f3e6c6;
+}
+
+.analytics-table tr:hover {
+  background-color: rgba(218, 165, 32, 0.1);
+}
+
+.search-terms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.search-term-card {
+  background: rgba(19, 44, 122, 0.05);
+  border: 2px solid #DAA520;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.search-term-text {
+  color: #132c7a;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.search-term-count {
+  color: #9d8042;
+  font-size: 0.875rem;
+}
+
+.analytics-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.summary-card {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.13);
+}
+
+.summary-label {
+  color: #9d8042;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.summary-value {
+  color: #DAA520;
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: 'Playfair Display', serif;
+}
+
+@media (max-width: 768px) {
+  .analytics-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .analytics-title {
+    font-size: 1.5rem;
+  }
+
+  .analytics-section {
+    padding: 1rem;
+  }
+
+  .analytics-table {
+    font-size: 0.875rem;
+  }
+
+  .analytics-table th,
+  .analytics-table td {
+    padding: 0.5rem;
+  }
+
+  .search-terms-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-value {
+    font-size: 1.5rem;
+  }
+}

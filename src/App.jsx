@@ -11,6 +11,7 @@ const WatchlistPage = lazy(() => import('./pages/Watchlist/WatchlistPage'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard/Dashboard'));
 const AddEdit = lazy(() => import('./pages/admin/AddEdit/AddEdit'));
 const ItemHistory = lazy(() => import('./pages/admin/ItemHistory/ItemHistory'));
+const Analytics = lazy(() => import('./pages/admin/Analytics/Analytics'));
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/add-edit" element={<AddEdit />} />
           <Route path="/admin/item-history" element={<ItemHistory />} />
+          <Route path="/admin/analytics" element={<Analytics />} />
         </Routes>
       </Suspense>
     </Router>
