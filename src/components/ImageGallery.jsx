@@ -81,6 +81,7 @@ const ImageGallery = ({ images, itemName }) => {
             <img 
               src={img} 
               alt={`${itemName} - Image ${idx + 1}`} 
+              loading="lazy"
               style={{ 
                 maxWidth: 300, 
                 borderRadius: 12, 
