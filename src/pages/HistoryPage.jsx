@@ -3,6 +3,8 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, doc, getDoc, onSnapshot, setDoc, addDoc, query, orderBy } from 'firebase/firestore';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Toast from '../components/Toast';
+import { useToast } from '../hooks/useToast';
 import '../App.css';
 
 
@@ -25,6 +27,7 @@ const HistoryPage = () => {
   const [modalText, setModalText] = useState('');
   const inputRef = useRef();
   const imageWrapperRef = useRef();
+  const toast = useToast();
 
   // Parse item key from query params
   useEffect(() => {
@@ -32,8 +35,8 @@ const HistoryPage = () => {
     const info = JSON.parse(localStorage.getItem('userInfo'));
     setUserInfo(info);
     if (!info || !info.name || !info.email) {
-      alert('Guest information not found. Please register first.');
-      navigate('/');
+      toast.error('Please register first to place bids');
+      setTimeout(() => navigate('/'), 2000);
       return;
     }
     // Get item key from query params
@@ -105,12 +108,12 @@ const HistoryPage = () => {
   const handleBidClick = async () => {
     const amount = parseInt(bidAmount);
     if (!amount || amount < 1) {
-      alert('Please enter a valid bid amount');
+      toast.error('Please enter a valid bid amount');
       return;
     }
     const startingBid = itemData?.starting_bid || 0;
     if (amount <= startingBid) {
-      alert(`Minimum bid must be greater than THB ${formatNumber(startingBid)}`);
+      toast.error(`Minimum bid must be greater than THB ${formatNumber(startingBid)}`);
       return;
     }
     // Get current bid from Firestore (bids collection)
@@ -119,7 +122,7 @@ const HistoryPage = () => {
     const increment = 500;
     const minAllowed = Math.max(startingBid, currentBid + increment);
     if (amount < minAllowed) {
-      alert(`Minimum next bid is THB ${formatNumber(minAllowed)}\n\nCurrent highest bid: THB ${formatNumber(currentBid)}\nRequired increment: THB ${formatNumber(increment)}\n\nClick "Suggest Bid" to auto-fill the minimum amount.`);
+      toast.error(`Minimum next bid is THB ${formatNumber(minAllowed)}. Current: THB ${formatNumber(currentBid)} + Increment: THB ${formatNumber(increment)}`);
       return;
     }
     const itemName = itemData?.name || itemKey;
@@ -291,6 +294,23 @@ const HistoryPage = () => {
           </div>
         </div>
       )}
+
+      {/* Toast Notifications */}
+      {toast.toasts.map(t => {
+        const toastType = t.type;
+        const toastMessage = t.message;
+        const toastDuration = t.duration;
+        const toastId = t.id;
+        return (
+          <Toast
+            key={toastId}
+            type={toastType}
+            message={toastMessage}
+            duration={toastDuration}
+            onClose={() => toast.removeToast(toastId)}
+          />
+        );
+      })}
     </div>
   );
 };

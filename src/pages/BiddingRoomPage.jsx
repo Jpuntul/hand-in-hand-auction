@@ -4,6 +4,8 @@ import { db } from '../firebase';
 import { collection, addDoc, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import BackgroundImg from '../assets/background.jpg';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Toast from '../components/Toast';
+import { useToast } from '../hooks/useToast';
 
 const BiddingRoom = () => {
   const [items, setItems] = useState({});
@@ -17,17 +19,20 @@ const BiddingRoom = () => {
   const [confirmModal, setConfirmModal] = useState({ show: false, item: null, amount: 0 });
   const [bidInputs, setBidInputs] = useState({});
   const [loading, setLoading] = useState(true);
+  const toast = useToast();
 
   useEffect(() => {
     // Check user info from localStorage
     const savedUserInfo = localStorage.getItem('userInfo');
     if (!savedUserInfo) {
-      alert('Guest information not found. Please register first.');
+      toast.error('Please register first to access the bidding room');
+      setTimeout(() => window.location.href = '/', 2000);
       return;
     }
     const parsedUserInfo = JSON.parse(savedUserInfo);
     if (!parsedUserInfo.name || !parsedUserInfo.email) {
-      alert('Guest information not found. Please register first.');
+      toast.error('Please register first to access the bidding room');
+      setTimeout(() => window.location.href = '/', 2000);
       return;
     }
     setUserInfo(parsedUserInfo);
@@ -103,7 +108,7 @@ const BiddingRoom = () => {
   const handleSubmitBid = async (itemKey) => {
     const amount = parseInt(bidInputs[itemKey]);
     if (!amount || amount < 1) {
-      alert('Please enter a valid bid amount');
+      toast.error('Please enter a valid bid amount');
       return;
     }
 
@@ -113,7 +118,7 @@ const BiddingRoom = () => {
     const minAllowed = currentBid + increment;
 
     if (amount < minAllowed) {
-      alert(`Minimum next bid is THB ${formatNumber(minAllowed)}\n\nCurrent highest bid: THB ${formatNumber(currentBid)}\nRequired increment: THB ${formatNumber(increment)}\n\nClick "Suggest Bid" to auto-fill the minimum amount.`);
+      toast.error(`Minimum next bid is THB ${formatNumber(minAllowed)}. Current: THB ${formatNumber(currentBid)} + Increment: THB ${formatNumber(increment)}`);
       return;
     }
 
@@ -163,7 +168,7 @@ const BiddingRoom = () => {
       setTimeout(() => setShowPopup(false), 2000);
     } catch (error) {
       console.error('Error submitting bid:', error);
-      alert('Failed to submit bid. Please try again.');
+      toast.error('Failed to submit bid. Please try again.');
       setConfirmModal({ show: false, item: null, amount: 0 });
     }
   };
@@ -511,6 +516,23 @@ const BiddingRoom = () => {
           </div>
         </div>
       )}
+
+      {/* Toast Notifications */}
+      {toast.toasts.map(t => {
+        const toastType = t.type;
+        const toastMessage = t.message;
+        const toastDuration = t.duration;
+        const toastId = t.id;
+        return (
+          <Toast
+            key={toastId}
+            type={toastType}
+            message={toastMessage}
+            duration={toastDuration}
+            onClose={() => toast.removeToast(toastId)}
+          />
+        );
+      })}
     </div>
   );
 };
