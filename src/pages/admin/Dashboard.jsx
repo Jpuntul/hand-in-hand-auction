@@ -1,6 +1,7 @@
 // src/pages/AdminDashboard.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 
 // Firebase imports
@@ -97,30 +98,6 @@ const formatNumber = (num) => {
 };
 
 // Components
-const LoadingSpinner = ({ size = 'medium' }) => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '20px'
-  }}>
-    <div style={{
-      width: size === 'large' ? '50px' : '30px',
-      height: size === 'large' ? '50px' : '30px',
-      border: '3px solid #f3f3f3',
-      borderTop: '3px solid #3498db',
-      borderRadius: '50%',
-      animation: 'spin 1s linear infinite'
-    }}></div>
-    <style>{`
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `}</style>
-  </div>
-);
-
 const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, confirmText, cancelText }) => {
   if (!isOpen) return null;
 

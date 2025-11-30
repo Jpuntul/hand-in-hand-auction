@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { db } from '../../firebase';
 import { doc, getDoc, collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const AdminItemHistory = () => {
   const navigate = useNavigate();
@@ -67,13 +68,7 @@ const AdminItemHistory = () => {
   };
 
   if (loading) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'url("/background.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="auction-card" style={{ textAlign: 'center', background: '#fbefd68f', border: '2px solid #D4AF37', borderRadius: 16, boxShadow: '0 4px 32px 0 rgba(212,175,55,0.10)', padding: '2.5rem 2rem' }}>
-          <p style={{ color: '#132d7a', fontWeight: 600 }}>Loading item history...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading item history..." size="large" />;
   }
 
   if (!item) {

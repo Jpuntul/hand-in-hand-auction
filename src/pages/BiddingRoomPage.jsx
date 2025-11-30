@@ -3,18 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, addDoc, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import BackgroundImg from '../assets/background.jpg';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const BiddingRoom = () => {
   const [items, setItems] = useState({});
   const [bids, setBids] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('item_no'); // item_no, highest_bid, name
+  const [sortBy, setSortBy] = useState('item_no'); // item_no, highest_bid, name, ending_soon
   const [filterBidStatus, setFilterBidStatus] = useState('all'); // all, with_bids, without_bids
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [userInfo, setUserInfo] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [confirmModal, setConfirmModal] = useState({ show: false, item: null, amount: 0 });
   const [bidInputs, setBidInputs] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check user info from localStorage
@@ -30,6 +32,15 @@ const BiddingRoom = () => {
     }
     setUserInfo(parsedUserInfo);
 
+    let itemsLoaded = false;
+    let bidsLoaded = false;
+
+    const checkLoading = () => {
+      if (itemsLoaded && bidsLoaded) {
+        setLoading(false);
+      }
+    };
+
     // Subscribe to items_list collection
     const unsubItems = onSnapshot(collection(db, 'items_list'), (snapshot) => {
       const itemsObj = {};
@@ -37,6 +48,8 @@ const BiddingRoom = () => {
         itemsObj[doc.id] = doc.data();
       });
       setItems(itemsObj);
+      itemsLoaded = true;
+      checkLoading();
     });
 
     // Subscribe to bids collection
@@ -46,6 +59,8 @@ const BiddingRoom = () => {
         bidsObj[doc.id] = doc.data();
       });
       setBids(bidsObj);
+      bidsLoaded = true;
+      checkLoading();
     });
 
     return () => {
@@ -206,6 +221,10 @@ const BiddingRoom = () => {
         return 0;
     }
   });
+
+  if (loading) {
+    return <LoadingSpinner message="Loading auction items..." size="large" />;
+  }
 
   return (
     <div className="min-h-screen relative" style={{

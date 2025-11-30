@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, doc, getDoc, onSnapshot, setDoc, addDoc, query, orderBy } from 'firebase/firestore';
+import LoadingSpinner from '../components/LoadingSpinner';
 import '../App.css';
 
 
@@ -97,11 +98,7 @@ const HistoryPage = () => {
   }
 
   if (!itemData) {
-    return (
-      <div className="main">
-        <h1>Loading...</h1>
-      </div>
-    );
+    return <LoadingSpinner message="Loading item details..." size="large" />;
   }
 
   // Bid submission logic

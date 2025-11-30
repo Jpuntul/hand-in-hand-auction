@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const WatchlistPage = () => {
   const navigate = useNavigate();
