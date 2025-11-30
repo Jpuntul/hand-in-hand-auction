@@ -1,0 +1,160 @@
+/* ItemHistory Page Styles */
+
+.item-history-container {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 2rem 1rem;
+}
+
+.item-history-content {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.item-history-header {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.13);
+}
+
+.item-history-title {
+  font-family: 'Playfair Display', serif;
+  color: #DAA520;
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.item-history-back-btn {
+  background-color: #daa520ae;
+  color: #122c7a;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.item-history-back-btn:hover {
+  background-color: #DAA520;
+}
+
+.item-details-card {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.13);
+}
+
+.item-details-title {
+  color: #DAA520;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #DAA520;
+}
+
+.item-detail-row {
+  display: flex;
+  margin: 0.5rem 0;
+  color: #9d8042;
+}
+
+.item-detail-label {
+  font-weight: 600;
+  min-width: 150px;
+  color: #122c7a;
+}
+
+.item-detail-value {
+  flex: 1;
+}
+
+.bid-history-card {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.13);
+}
+
+.bid-history-title {
+  color: #DAA520;
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+}
+
+.bid-history-empty {
+  text-align: center;
+  color: #9d8042;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.bid-history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bid-history-table th {
+  background: #132d7ac9;
+  color: #D4AF37;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid #D4AF37;
+}
+
+.bid-history-table td {
+  padding: 0.75rem;
+  color: #9d8042;
+  border-bottom: 1px solid #f3e6c6;
+}
+
+.bid-history-table tr:hover {
+  background-color: rgba(218, 165, 32, 0.1);
+}
+
+.bid-amount-highlight {
+  color: #28a745;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .item-history-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .item-history-title {
+    font-size: 1.5rem;
+  }
+
+  .item-details-card,
+  .bid-history-card {
+    padding: 1rem;
+  }
+
+  .item-detail-row {
+    flex-direction: column;
+  }
+
+  .item-detail-label {
+    min-width: auto;
+    margin-bottom: 0.25rem;
+  }
+
+  .bid-history-table {
+    font-size: 0.875rem;
+  }
+
+  .bid-history-table th,
+  .bid-history-table td {
+    padding: 0.5rem;
+  }
+}

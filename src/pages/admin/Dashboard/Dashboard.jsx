@@ -1,11 +1,11 @@
 // src/pages/AdminDashboard.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import LoadingSpinner from '../../components/LoadingSpinner';
-
+import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner';
+import './Dashboard.css';
 
 // Firebase imports
-import { db } from '../../firebase';
+import { db } from '../../../firebase';
 import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
 
 // Hook to fetch items from Firestore

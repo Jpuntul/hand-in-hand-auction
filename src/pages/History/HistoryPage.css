@@ -1,0 +1,140 @@
+/* HistoryPage Styles */
+
+.history-container {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 2rem 1rem;
+  font-family: 'Inter', sans-serif;
+  color: #FAF3E0;
+}
+
+.history-content {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.history-header {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.13);
+}
+
+.history-title {
+  font-family: 'Playfair Display', serif;
+  color: #DAA520;
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.history-back-btn {
+  background-color: #daa520ae;
+  color: #122c7a;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.history-back-btn:hover {
+  background-color: #DAA520;
+}
+
+.item-details {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.13);
+}
+
+.item-details h2 {
+  color: #DAA520;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #DAA520;
+}
+
+.item-details p {
+  color: #9d8042;
+  margin: 0.5rem 0;
+}
+
+.item-details strong {
+  color: #122c7a;
+}
+
+.bid-history-section {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.13);
+}
+
+.bid-history-section h2 {
+  color: #DAA520;
+  margin-bottom: 1rem;
+}
+
+.bid-history-empty {
+  text-align: center;
+  color: #9d8042;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.bid-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+}
+
+.bid-history-table th {
+  background: #132d7ac9;
+  color: #D4AF37;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid #D4AF37;
+}
+
+.bid-history-table td {
+  padding: 0.75rem;
+  color: #9d8042;
+  border-bottom: 1px solid #f3e6c6;
+}
+
+.bid-history-table tr:hover {
+  background-color: rgba(218, 165, 32, 0.1);
+}
+
+@media (max-width: 768px) {
+  .history-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .history-title {
+    font-size: 1.5rem;
+  }
+
+  .item-details,
+  .bid-history-section {
+    padding: 1rem;
+  }
+
+  .bid-history-table {
+    font-size: 0.875rem;
+  }
+
+  .bid-history-table th,
+  .bid-history-table td {
+    padding: 0.5rem;
+  }
+}

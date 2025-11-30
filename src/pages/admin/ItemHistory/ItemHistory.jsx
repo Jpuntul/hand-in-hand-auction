@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { db } from '../../firebase';
+import { db } from '../../../firebase';
 import { doc, getDoc, collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner';
+import './ItemHistory.css';
 
 const AdminItemHistory = () => {
   const navigate = useNavigate();

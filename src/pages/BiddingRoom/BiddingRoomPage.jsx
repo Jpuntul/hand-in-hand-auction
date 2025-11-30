@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 import { collection, addDoc, onSnapshot, doc, setDoc } from 'firebase/firestore';
-import BackgroundImg from '../assets/background.jpg';
-import LoadingSpinner from '../components/LoadingSpinner';
-import Toast from '../components/Toast';
-import { useToast } from '../hooks/useToast';
+import BackgroundImg from '../../assets/background.jpg';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import Toast from '../../components/Toast/Toast';
+import { useToast } from '../../hooks/useToast';
 import './BiddingRoomPage.css';
 
 const BiddingRoom = () => {

@@ -1,0 +1,107 @@
+/* WatchlistPage Styles */
+
+.watchlist-container {
+  min-height: 100vh;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Inter', sans-serif;
+  color: #FAF3E0;
+  padding: 2rem 1rem;
+}
+
+.watchlist-header {
+  max-width: 64rem;
+  margin: 0 auto 2rem auto;
+  text-align: center;
+}
+
+.watchlist-title {
+  font-family: 'Playfair Display', serif;
+  color: #DAA520;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.watchlist-back-btn {
+  background-color: #daa520ae;
+  color: #122c7a;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.watchlist-back-btn:hover {
+  background-color: #DAA520;
+}
+
+.watchlist-content {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.watchlist-empty {
+  text-align: center;
+  color: #9d8042;
+  font-size: 1.125rem;
+  margin-top: 2rem;
+}
+
+.watchlist-item {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.13);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.watchlist-item-title {
+  color: #DAA520;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid #DAA520;
+}
+
+.watchlist-item-info {
+  color: #9d8042;
+  margin: 0.5rem 0;
+}
+
+.watchlist-item-info strong {
+  color: #122c7a;
+}
+
+.watchlist-remove-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.watchlist-remove-btn:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+  .watchlist-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .watchlist-title {
+    font-size: 1.5rem;
+  }
+
+  .watchlist-item {
+    padding: 1rem;
+  }
+}
