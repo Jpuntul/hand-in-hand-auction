@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import './LoginPage.css';
 
 /**
  * LoginPage component renders a registration form for users to enter their name, email, and phone number.

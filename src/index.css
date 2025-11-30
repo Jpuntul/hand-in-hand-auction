@@ -197,10 +197,8 @@ h1, h2, h3, h4, h5, h6 {
     flex-wrap: wrap;
   }
 
-  /* Grid responsive */
-  .grid-cols-2, .grid-cols-3, .grid-cols-4 {
-    grid-template-columns: 1fr !important;
-  }
+  /* Grid responsive - don't force single column for filter grids */
+  /* Removed: .grid-cols-2, .grid-cols-3, .grid-cols-4 override */
 }
 
 /* Small phones */

@@ -1,0 +1,63 @@
+/* LoginPage Styles */
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 1rem;
+}
+
+.login-card {
+  background: rgba(251, 239, 214, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  padding: 2rem;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.login-title {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  color: #DAA520;
+  margin-bottom: 1.5rem;
+  font-size: 1.875rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-label {
+  color: #9d8042;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.login-button {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #9d8042;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+}

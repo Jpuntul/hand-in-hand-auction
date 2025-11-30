@@ -1,0 +1,266 @@
+/* BiddingRoomPage Styles */
+
+.bidding-room-container {
+  min-height: 100vh;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  color: #FAF3E0;
+}
+
+.bidding-room-background {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Top Bar */
+.bidding-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: clamp(0.5rem, 2vw, 1rem) 0.5rem;
+}
+
+.topbar-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.topbar-btn {
+  background-color: #daa520ae;
+  color: #122c7a;
+  border: none;
+  padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 12px);
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.topbar-title {
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  color: #DAA520;
+  font-size: clamp(0.95rem, 3vw, 1.25rem);
+  line-height: 1.2;
+}
+
+.topbar-welcome {
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-weight: bold;
+  color: #DAA520;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+}
+
+/* Search Bar */
+.search-bar {
+  background-color: #3a5fcfb8;
+  color: #daa520ae;
+  box-shadow: 0 0 5px rgba(212, 175, 55, 0.2);
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  padding: clamp(6px, 1.5vw, 8px) clamp(8px, 2vw, 10px);
+  margin-bottom: clamp(0.4rem, 1vw, 0.5rem);
+  width: 100%;
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+/* Filter Controls */
+.filter-container {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 0 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .filter-container {
+    padding: 0 0.5rem;
+  }
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .filter-grid {
+    gap: 0.5rem;
+  }
+}
+
+.filter-select,
+.filter-input {
+  background-color: #3a5fcfb8;
+  color: #FAF3E0;
+  padding: 6px 2px;
+  border: 2px solid #888;
+  border-radius: 8px;
+  outline: none;
+  width: 100%;
+  min-width: 0;
+  font-size: 0.75rem;
+}
+
+.filter-input {
+  padding: 6px 4px;
+}
+
+@media (min-width: 768px) {
+  .filter-select,
+  .filter-input {
+    font-size: 0.875rem;
+  }
+}
+
+.results-count {
+  text-align: center;
+  margin-top: 0.5rem;
+  color: #9d8042;
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+}
+
+/* Item List */
+.items-container {
+  padding-top: clamp(200px, 30vh, 240px);
+  padding-bottom: 2rem;
+}
+
+.item-card {
+  max-width: 32rem;
+  margin: 0 auto 1.5rem auto;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.item-title {
+  margin-top: 0;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  color: #DAA520;
+  border-bottom: 2px solid #DAA520;
+}
+
+.item-info {
+  color: #9d8042;
+  text-align: left;
+}
+
+.item-min-bid {
+  color: #D4AF37;
+  font-weight: bold;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.bid-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.bid-input {
+  flex: 1;
+  font-size: 1rem;
+}
+
+.suggest-btn {
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+.submit-btn {
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+
+.history-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Popup */
+.bid-popup {
+  position: fixed;
+  top: 33.333%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: bold;
+  z-index: 50;
+  background-color: #D4AF37;
+  color: #121212;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+/* Confirmation Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.modal-content {
+  background-color: #FAF3E0;
+  color: #121212;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 24rem;
+  width: 91.666667%;
+}
+
+.modal-text {
+  margin-bottom: 1rem;
+}
+
+.modal-btn-yes {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #D4AF37;
+  color: #122c7a;
+}
+
+.modal-btn-no {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #999;
+  color: #fff;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+  .topbar-welcome {
+    display: none;
+  }
+}

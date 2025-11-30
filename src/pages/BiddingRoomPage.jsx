@@ -6,6 +6,7 @@ import BackgroundImg from '../assets/background.jpg';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
+import './BiddingRoomPage.css';
 
 const BiddingRoom = () => {
   const [items, setItems] = useState({});
@@ -97,12 +98,6 @@ const BiddingRoom = () => {
       ...prev,
       [itemKey]: value
     }));
-  };
-
-  const getSuggestedBid = (itemKey) => {
-    const currentBid = bids[itemKey]?.bid || 0;
-    const increment = items[itemKey]?.bid_increment || 500;
-    return currentBid + increment;
   };
 
   const handleSubmitBid = async (itemKey) => {
@@ -240,93 +235,99 @@ const BiddingRoom = () => {
       fontFamily: "'Inter', sans-serif",
       color: '#FAF3E0'
     }}>
-      {/* Top Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 text-center shadow-lg" style={{
+      {/* Top Bar - Responsive */}
+      <div className="fixed top-0 left-0 right-0 z-50 shadow-lg" style={{
         backgroundImage: `linear-gradient(rgba(211, 210, 192, 0.258), rgba(247, 251, 214, 0.228)), url(${BackgroundImg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        padding: '0.75rem 0.5rem',
-        paddingTop: '3rem'
+        padding: 'clamp(0.5rem, 2vw, 1rem) 0.5rem'
       }}>
-        <button
-          onClick={handleLogout}
-          className="absolute top-2 left-2 font-bold cursor-pointer z-50 rounded-lg"
-          style={{
-            backgroundColor: '#daa520ae',
-            color: '#122c7a',
-            border: 'none',
-            padding: '8px 12px',
-            fontSize: '0.85rem'
-          }}
-        >
-          Logout
-        </button>
-        
-        <button
-          onClick={handleWatchlist}
-          className="absolute top-2 right-2 font-bold cursor-pointer z-50 rounded-lg"
-          style={{
-            backgroundColor: '#daa520ae',
-            color: '#122c7a',
-            border: 'none',
-            padding: '8px 12px',
-            fontSize: '0.85rem'
-          }}
-        >
-          Watchlist
-        </button>
+        {/* Buttons Row */}
+        <div className="flex justify-between items-center mb-2">
+          <button
+            onClick={handleLogout}
+            className="font-bold cursor-pointer rounded-lg"
+            style={{
+              backgroundColor: '#daa520ae',
+              color: '#122c7a',
+              border: 'none',
+              padding: 'clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 12px)',
+              fontSize: 'clamp(0.75rem, 2vw, 0.85rem)'
+            }}
+          >
+            Logout
+          </button>
+          
+          <button
+            onClick={handleWatchlist}
+            className="font-bold cursor-pointer rounded-lg"
+            style={{
+              backgroundColor: '#daa520ae',
+              color: '#122c7a',
+              border: 'none',
+              padding: 'clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 12px)',
+              fontSize: 'clamp(0.75rem, 2vw, 0.85rem)'
+            }}
+          >
+            Watchlist
+          </button>
+        </div>
 
-        <h1 className="mt-0 font-serif" style={{
+        {/* Title - Compact on Mobile */}
+        <h1 className="mt-0 mb-2 text-center font-serif" style={{
           fontFamily: "'Playfair Display', serif",
           color: '#DAA520',
-          fontSize: '1.25rem',
-          lineHeight: '1.3'
+          fontSize: 'clamp(0.95rem, 3vw, 1.25rem)',
+          lineHeight: '1.2'
         }}>
-          <div>Hand in Hand for Myanmar</div>
-          <div>Bidding Room</div>
+          Hand in Hand for Myanmar - Bidding Room
         </h1>
         
+        {/* Welcome Message - Hidden on Small Mobile */}
         {userInfo && (
-          <p className="mb-2 font-bold" style={{ 
+          <p className="mb-2 text-center font-bold hidden sm:block" style={{ 
             color: '#DAA520',
-            fontSize: '0.85rem'
+            fontSize: 'clamp(0.75rem, 2vw, 0.85rem)'
           }}>
             Welcome, {userInfo.name}!
           </p>
         )}
         
+        {/* Search Bar */}
         <input
           type="text"
           placeholder="Search items..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="auction-input w-full max-w-lg mx-auto block shadow-lg mb-2"
+          className="auction-input w-full max-w-3xl mx-auto block shadow-lg"
           style={{ 
             backgroundColor: '#3a5fcfb8', 
             color: '#daa520ae', 
             boxShadow: '0 0 5px rgba(212, 175, 55, 0.2)',
-            fontSize: '0.9rem',
-            padding: '8px 10px',
-            marginBottom: '8px'
+            fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+            padding: 'clamp(6px, 1.5vw, 8px) clamp(8px, 2vw, 10px)',
+            marginBottom: 'clamp(0.4rem, 1vw, 0.5rem)'
           }}
         />
 
-        {/* Filter Controls - Single Row on Mobile */}
-        <div className="max-w-4xl mx-auto px-2" style={{ fontSize: '0.75rem' }}>
-          <div className="flex gap-1 md:grid md:grid-cols-3 md:gap-2">
+        {/* Filter Controls - 4 columns, responsive sizing */}
+        <div className="max-w-3xl mx-auto px-1 md:px-2">
+          <div className="grid grid-cols-4 gap-1 md:gap-2" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
             {/* Sort By */}
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="auction-input"
+              className="text-xs md:text-sm"
               style={{ 
                 backgroundColor: '#3a5fcfb8', 
                 color: '#FAF3E0',
-                fontSize: '0.75rem',
-                padding: '5px 4px',
-                flex: '1 1 0',
-                minWidth: '0'
+                padding: '6px 2px',
+                border: '2px solid #888',
+                borderRadius: '8px',
+                outline: 'none',
+                width: '100%',
+                minWidth: 0
               }}
             >
               <option value="item_no">Item #</option>
@@ -338,14 +339,16 @@ const BiddingRoom = () => {
             <select
               value={filterBidStatus}
               onChange={(e) => setFilterBidStatus(e.target.value)}
-              className="auction-input"
+              className="text-xs md:text-sm"
               style={{ 
                 backgroundColor: '#3a5fcfb8', 
                 color: '#FAF3E0',
-                fontSize: '0.75rem',
-                padding: '5px 4px',
-                flex: '1 1 0',
-                minWidth: '0'
+                padding: '6px 2px',
+                border: '2px solid #888',
+                borderRadius: '8px',
+                outline: 'none',
+                width: '100%',
+                minWidth: 0
               }}
             >
               <option value="all">All</option>
@@ -359,14 +362,16 @@ const BiddingRoom = () => {
               placeholder="Min"
               value={priceRange.min}
               onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
-              className="auction-input"
+              className="text-xs md:text-sm"
               style={{ 
                 backgroundColor: '#3a5fcfb8', 
                 color: '#FAF3E0',
-                fontSize: '0.75rem',
-                padding: '5px 4px',
-                flex: '0.5 1 0',
-                minWidth: '0'
+                padding: '6px 4px',
+                border: '2px solid #888',
+                borderRadius: '8px',
+                outline: 'none',
+                width: '100%',
+                minWidth: 0
               }}
             />
             
@@ -376,27 +381,32 @@ const BiddingRoom = () => {
               placeholder="Max"
               value={priceRange.max}
               onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
-              className="auction-input"
+              className="text-xs md:text-sm"
               style={{ 
                 backgroundColor: '#3a5fcfb8', 
                 color: '#FAF3E0',
-                fontSize: '0.75rem',
-                padding: '5px 4px',
-                flex: '0.5 1 0',
-                minWidth: '0'
+                padding: '6px 4px',
+                border: '2px solid #888',
+                borderRadius: '8px',
+                outline: 'none',
+                width: '100%',
+                minWidth: 0
               }}
             />
           </div>
         </div>
 
-        {/* Results Count - Compact */}
-        <p className="text-xs mt-2" style={{ color: '#9d8042' }}>
+        {/* Results Count */}
+        <p className="text-center mt-2" style={{ 
+          color: '#9d8042',
+          fontSize: 'clamp(0.7rem, 1.8vw, 0.8rem)'
+        }}>
           {sortedItems.length} of {Object.keys(items).length} items
         </p>
       </div>
 
-      {/* Item List */}
-      <div style={{ paddingTop: '240px', paddingBottom: '2rem' }}>
+      {/* Item List - Adjusted padding */}
+      <div style={{ paddingTop: 'clamp(200px, 30vh, 240px)', paddingBottom: '2rem' }}>
         {sortedItems.map(([key, item]) => {
           const bidInfo = bids[key] || {};
           const bid = bidInfo.bid ? formatNumber(bidInfo.bid) : '-';
@@ -444,16 +454,6 @@ const BiddingRoom = () => {
                   onChange={(e) => handleBidInputChange(key, e.target.value)}
                   className="auction-input flex-1 text-base"
                 />
-                <button
-                  onClick={() => {
-                    const suggestedBid = getSuggestedBid(key);
-                    handleBidInputChange(key, suggestedBid.toString());
-                  }}
-                  className="auction-btn-gold px-3 py-2 whitespace-nowrap text-sm"
-                  title="Auto-fill minimum bid"
-                >
-                  Suggest Bid
-                </button>
                 <button
                   onClick={() => handleSubmitBid(key)}
                   className="auction-btn px-4 py-2 whitespace-nowrap"
