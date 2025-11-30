@@ -8,6 +8,9 @@ const BiddingRoom = () => {
   const [items, setItems] = useState({});
   const [bids, setBids] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('item_no'); // item_no, highest_bid, name
+  const [filterBidStatus, setFilterBidStatus] = useState('all'); // all, with_bids, without_bids
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [userInfo, setUserInfo] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [confirmModal, setConfirmModal] = useState({ show: false, item: null, amount: 0 });
@@ -149,16 +152,53 @@ const BiddingRoom = () => {
   };
 
   const filteredItems = Object.entries(items).filter(([key, item]) => {
+    // Text search
     const query = searchQuery.toLowerCase();
     const name = item.name?.toLowerCase() || '';
     const number = item.item_no?.toString().toLowerCase() || '';
-    return name.includes(query) || number.includes(query);
+    const description = item.description?.toLowerCase() || '';
+    const sponsor = item.sponsor?.toLowerCase() || '';
+    const textMatch = name.includes(query) || number.includes(query) || description.includes(query) || sponsor.includes(query);
+    
+    if (!textMatch) return false;
+
+    // Bid status filter
+    const hasBids = bids[key]?.bid > 0;
+    if (filterBidStatus === 'with_bids' && !hasBids) return false;
+    if (filterBidStatus === 'without_bids' && hasBids) return false;
+
+    // Price range filter (based on current highest bid)
+    const currentBid = bids[key]?.bid || item.starting_bid || 0;
+    const minPrice = priceRange.min ? parseInt(priceRange.min) : 0;
+    const maxPrice = priceRange.max ? parseInt(priceRange.max) : Infinity;
+    if (currentBid < minPrice || currentBid > maxPrice) return false;
+
+    return true;
   });
 
   const sortedItems = filteredItems.sort((a, b) => {
-    const noA = parseInt(a[1].item_no) || 0;
-    const noB = parseInt(b[1].item_no) || 0;
-    return noA - noB;
+    const [keyA, itemA] = a;
+    const [keyB, itemB] = b;
+
+    switch (sortBy) {
+      case 'item_no':
+        const noA = parseInt(itemA.item_no) || 0;
+        const noB = parseInt(itemB.item_no) || 0;
+        return noA - noB;
+      
+      case 'highest_bid':
+        const bidA = bids[keyA]?.bid || itemA.starting_bid || 0;
+        const bidB = bids[keyB]?.bid || itemB.starting_bid || 0;
+        return bidB - bidA; // Descending (highest first)
+      
+      case 'name':
+        const nameA = itemA.name?.toLowerCase() || '';
+        const nameB = itemB.name?.toLowerCase() || '';
+        return nameA.localeCompare(nameB);
+      
+      default:
+        return 0;
+    }
   });
 
   return (
@@ -219,12 +259,79 @@ const BiddingRoom = () => {
         
         <input
           type="text"
-          placeholder="Search items..."
+          placeholder="Search items by name, number, description, or sponsor..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="auction-input w-full max-w-lg mx-auto block text-base shadow-lg"
+          className="auction-input w-full max-w-lg mx-auto block text-base shadow-lg mb-3"
           style={{ backgroundColor: '#3a5fcfb8', color: '#daa520ae', boxShadow: '0 0 5px rgba(212, 175, 55, 0.2)' }}
         />
+
+        {/* Filter Controls */}
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
+          {/* Sort By */}
+          <div>
+            <label className="block text-sm font-semibold mb-1" style={{ color: '#DAA520' }}>
+              Sort By:
+            </label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="auction-input w-full text-base"
+              style={{ backgroundColor: '#3a5fcfb8', color: '#FAF3E0' }}
+            >
+              <option value="item_no">Item Number</option>
+              <option value="highest_bid">Highest Bid</option>
+              <option value="name">Name (A-Z)</option>
+            </select>
+          </div>
+
+          {/* Bid Status Filter */}
+          <div>
+            <label className="block text-sm font-semibold mb-1" style={{ color: '#DAA520' }}>
+              Bid Status:
+            </label>
+            <select
+              value={filterBidStatus}
+              onChange={(e) => setFilterBidStatus(e.target.value)}
+              className="auction-input w-full text-base"
+              style={{ backgroundColor: '#3a5fcfb8', color: '#FAF3E0' }}
+            >
+              <option value="all">All Items</option>
+              <option value="with_bids">With Bids</option>
+              <option value="without_bids">No Bids Yet</option>
+            </select>
+          </div>
+
+          {/* Price Range */}
+          <div>
+            <label className="block text-sm font-semibold mb-1" style={{ color: '#DAA520' }}>
+              Price Range (THB):
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                placeholder="Min"
+                value={priceRange.min}
+                onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
+                className="auction-input w-1/2 text-base"
+                style={{ backgroundColor: '#3a5fcfb8', color: '#FAF3E0' }}
+              />
+              <input
+                type="number"
+                placeholder="Max"
+                value={priceRange.max}
+                onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
+                className="auction-input w-1/2 text-base"
+                style={{ backgroundColor: '#3a5fcfb8', color: '#FAF3E0' }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Results Count */}
+        <p className="text-sm mt-3" style={{ color: '#9d8042' }}>
+          Showing {sortedItems.length} of {Object.keys(items).length} items
+        </p>
       </div>
 
       {/* Item List */}
