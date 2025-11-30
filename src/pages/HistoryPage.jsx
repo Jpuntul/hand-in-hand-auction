@@ -5,6 +5,7 @@ import { collection, doc, getDoc, onSnapshot, setDoc, addDoc, query, orderBy } f
 import LoadingSpinner from '../components/LoadingSpinner';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
+import ImageGallery from '../components/ImageGallery';
 import '../App.css';
 
 
@@ -26,7 +27,6 @@ const HistoryPage = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState('');
   const inputRef = useRef();
-  const imageWrapperRef = useRef();
   const toast = useToast();
 
   // Parse item key from query params
@@ -65,23 +65,6 @@ const HistoryPage = () => {
     });
     return () => unsub();
   }, [itemKey]);
-
-  // Adjust image alignment on mount and resize
-  useEffect(() => {
-    function adjustImageAlignment() {
-      const wrapper = imageWrapperRef.current;
-      if (!wrapper) return;
-      if (wrapper.scrollWidth > wrapper.clientWidth) {
-        wrapper.style.justifyContent = 'flex-start';
-        wrapper.scrollLeft = 0;
-      } else {
-        wrapper.style.justifyContent = 'center';
-      }
-    }
-    adjustImageAlignment();
-    window.addEventListener('resize', adjustImageAlignment);
-    return () => window.removeEventListener('resize', adjustImageAlignment);
-  }, [itemData]);
 
   // Show popup for 2 seconds
   useEffect(() => {
@@ -200,16 +183,11 @@ const HistoryPage = () => {
         </div>
         <h1 id="item-title" style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(1.3rem, 4vw, 2rem)', color: '#D4AF37', textAlign: 'center', background: '#132d7a', borderRadius: 10, padding: '0.7rem 1rem', marginBottom: '1rem', fontWeight: 800, letterSpacing: '0.01em', boxShadow: '0 2px 12px #132d7a22', border: '1.5px solid #D4AF37', maxWidth: 770, marginLeft: 'auto', marginRight: 'auto' }}>{itemData.name || 'Bid History'}</h1>
         <div id="main" style={{ padding: '0', margin: 0, maxWidth: 770, marginLeft: 'auto', marginRight: 'auto' }}>
-          {/* Slideable images */}
-          <div ref={imageWrapperRef} className="image-wrapper" id="image-wrapper" style={{ display: 'flex', gap: 16, marginBottom: 24, overflowX: 'auto', justifyContent: 'flex-start', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'thin', maxWidth: 770 }}>
-            {['picture1', 'picture2', 'picture3'].map((pic, idx) => (
-              itemData[pic] ? (
-                <div key={pic} style={{ flex: '0 0 auto', scrollSnapAlign: 'center' }}>
-                  <img src={itemData[pic]} alt={itemData.name || `Item Image ${idx+1}`} style={{ maxWidth: 300, borderRadius: 12, boxShadow: '0 0 12px rgba(212, 175, 55, 0.3)', width: '100%', objectFit: 'cover' }} />
-                </div>
-              ) : null
-            ))}
-          </div>
+          {/* Image Gallery with Lightbox */}
+          <ImageGallery 
+            images={[itemData.picture1, itemData.picture2, itemData.picture3]}
+            itemName={itemData.name || 'Item'}
+          />
           <div id="item-description" className="auction-card" style={{ padding: '1.2rem', width: '100%', textAlign: 'left', marginBottom: '1.2rem', fontSize: '1.08rem', color: '#9d8042', backgroundColor: '#fbefd68f', border: '1.5px solid #D4AF37', borderRadius: 12, boxShadow: '0 1px 8px #D4AF3722', maxWidth: 770, marginLeft: 'auto', marginRight: 'auto' }}>
             {itemData.description && (
               <>
