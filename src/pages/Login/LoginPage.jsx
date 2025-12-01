@@ -48,7 +48,6 @@ export default function Login() {
 
       // Save locally (optional)
       localStorage.setItem('userInfo', JSON.stringify(formData));
-      console.log('User registered:', formData);
 
       navigate('/bidding-room', { state: { user: formData } });
 

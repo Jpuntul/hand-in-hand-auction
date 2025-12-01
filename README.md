@@ -1,17 +1,17 @@
 # Hand in Hand for Myanmar - Auction Platform
 
-A modern, real-time charity auction platform built with React, Vite, and Firebase Firestore. Features a beautiful gold and navy theme with live bidding, watchlist functionality, and admin controls.
+A modern, real-time charity auction platform built with React, Vite, and Firebase Firestore. Features live bidding, advanced search/filtering, and comprehensive admin controls.
 
 ## ✨ Features
 
-- 🎨 **Modern UI** - Clean, responsive design with gold/navy auction theme
-- 🔥 **Real-time Updates** - Live bid updates using Firebase Firestore
-- 👥 **Guest System** - Simple localStorage-based user registration
-- 📊 **Admin Dashboard** - Complete CRUD operations for auction items
-- 🖼️ **Image Support** - Multiple images per item with sliding gallery
-- 📋 **Watchlist** - Track items you've bid on
-- 📜 **Bid History** - Detailed history for each item
-- ⚡ **Fast & Lightweight** - Built with Vite for optimal performance
+- 🔥 **Real-time Bidding** - Live bid updates using Firebase Firestore
+- 🔍 **Advanced Search & Filters** - Search by name/sponsor, filter by price range and bid status
+- 💵 **Bid Validation** - Enforces minimum bid increments with confirmation modals
+- 📋 **Watchlist** - Automatically track items you've bid on
+- 📊 **Admin Dashboard** - Complete CRUD operations with analytics
+- 🖼️ **Image Gallery** - Multiple images per item with lightbox view
+- 📱 **Mobile Responsive** - Fully optimized for all devices
+- 🔔 **Toast Notifications** - User-friendly feedback for all actions
 
 ## 🚀 Getting Started
 
@@ -77,143 +77,268 @@ A modern, real-time charity auction platform built with React, Vite, and Firebas
 ## 📁 Project Structure
 
 ```
-src/
-├── pages/
-│   ├── LoginPage.jsx          # Guest registration
-│   ├── BiddingRoomPage.jsx    # Main bidding interface
-│   ├── HistoryPage.jsx        # Item details & bid history
-│   ├── WatchlistPage.jsx      # User's watchlist
-│   └── admin/
-│       ├── Dashboard.jsx      # Admin item management
-│       └── AddEdit.jsx        # Add/edit items
-├── firebase.js                # Firebase configuration
-├── index.css                  # Global auction theme
-└── App.jsx                    # Main routing
+hand-in-hand-auction/
+├── src/
+│   ├── pages/                 # Page components (folder-based)
+│   │   ├── Login/            # Guest registration page
+│   │   ├── BiddingRoom/      # Main bidding interface
+│   │   ├── History/          # Item details & bid history
+│   │   ├── Watchlist/        # User's watchlist page
+│   │   └── admin/
+│   │       ├── Dashboard/    # Admin item management
+│   │       ├── AddEdit/      # Add/edit items form
+│   │       ├── Analytics/    # Analytics dashboard
+│   │       └── ItemHistory/  # Admin bid history view
+│   ├── components/           # Reusable components
+│   │   ├── Toast/           # Toast notification system
+│   │   ├── LoadingSpinner/  # Loading indicator
+│   │   └── ImageGallery/    # Image lightbox gallery
+│   ├── hooks/               # Custom React hooks
+│   │   ├── useToast.js     # Toast notification hook
+│   │   └── useAnalytics.js # Analytics tracking hook
+│   ├── __test__/           # Unit tests
+│   ├── firebase.js         # Firebase configuration
+│   ├── App.jsx             # Main routing & navigation
+│   └── main.jsx            # React entry point
+├── public/                 # Static assets
+├── package.json           # Dependencies
+├── vite.config.js        # Vite configuration
+└── README.md            # Project documentation
+```
+
+**Folder Structure Pattern:**
+Each page/component is organized in its own folder with co-located CSS:
+```
+ComponentName/
+├── ComponentName.jsx
+└── ComponentName.css
 ```
 
 ## 🎯 Usage
 
-### For Guests
+### For Guests (Bidders)
 
-1. **Register** - Enter your name, email, and phone on the login page
-2. **Browse Items** - View all auction items in the Bidding Room
-3. **Place Bids** - Enter bid amount and confirm
-4. **Track Items** - Items you bid on appear in your Watchlist
-5. **View History** - See detailed bid history for each item
+1. **Register** 
+   - Enter your name, email, and phone on the login page
+   - Information is stored locally in browser
 
-### For Admins
+2. **Browse Items** 
+   - View all auction items in the Bidding Room
+   - Use search to find items by name, sponsor, or description
+   - Filter by bid status (all/with bids/without bids)
+   - Filter by price range
+   - Sort by item number, highest bid, name, or ending soon
 
-1. **Access Dashboard** - Navigate to `/admin`
-2. **Add Items** - Click "Add New Item" and fill in details
-3. **Edit Items** - Click edit icon on any item
-4. **Delete Items** - Click delete icon (with confirmation)
-5. **Manage Images** - Add up to 3 image URLs per item
+3. **Place Bids** 
+   - Enter bid amount (must meet minimum increment)
+   - System shows required next bid amount
+   - Confirm bid in modal dialog
+   - Receive toast notification on success/failure
 
-## 🔧 Configuration
+4. **Track Items** 
+   - Items you bid on automatically appear in Watchlist
+   - Click item name to view detailed history
 
-### Firebase Rules
+## 🎯 Usage
 
-Recommended Firestore security rules:
+**For Guests:**
+1. Register with name, email, and phone
+2. Browse items with search and filters
+3. Place bids (with increment validation and confirmation)
+4. View your watchlist and bid history
 
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Allow read access to items and bids
-    match /items_list/{document=**} {
-      allow read: if true;
-      allow write: if request.auth != null; // Or your admin logic
+**For Admins:**
+- Access dashboard at `/admin`
+- Add/edit/delete auction items
+- View analytics and bid history
+- Manage images (up to 3 per item)esource.data.phone is string &&
+                      request.resource.data.timestamp is number;
     }
     
-    match /bids/{document=**} {
+    // History - Read: all, Write: all (with validation)
+    match /history/{itemId}/{historyId} {
       allow read: if true;
-      allow write: if true; // Add your validation logic
+      allow create: if request.resource.data.bid is number &&
+                       request.resource.data.bidder is string &&
+                       request.resource.data.email is string &&
+                       request.resource.data.phone is string &&
+                       request.resource.data.timestamp is number;
     }
     
-    match /history/{item}/{entry=**} {
-      allow read: if true;
-      allow write: if true; // Add your validation logic
+    // Analytics - Read: admins only, Write: all
+    match /analytics/{doc} {
+      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow write: if true;
     }
   }
 }
 ```
 
-### Environment Variables (Optional)
+### Environment Variables
 
-For production, consider using environment variables for Firebase config.
+For production deployment, create a `.env` file:
 
-## 🛠️ Built With
+```env
+VITE_FIREBASE_API_KEY=your_api_key_here
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
+```
 
-- [React](https://reactjs.org/) - UI library
-- [Vite](https://vitejs.dev/) - Build tool
-- [Firebase Firestore](https://firebase.google.com/docs/firestore) - Real-time database
-- [React Router](https://reactrouter.com/) - Client-side routing
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS (partial)
+Then update `src/firebase.js`:
 
-## 📝 Data Model
-
-### items_list Collection
 ```javascript
+## 🔧 Configuration
+
+**Firebase Setup:**
+Update `src/firebase.js` with your Firebase credentials, or use environment variables:
+
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_PROJECT_ID=your_project_id
+# ... other Firebase config
+```
+
+**Firestore Security Rules:**
+Configure proper security rules in Firebase Console for production deployment. See Firebase documentation for best practices.
+  email: string,                // Bidder's email
+  phone: string,                // Bidder's phone
+  timestamp: number             // Unix timestamp
+}
+```
+
+#### `analytics` Collection
+Tracks user interactions (optional):
+```javascript
+// Document ID: item_{item_no}
 {
   item_no: number,
   name: string,
-  description: string,
-  sponsor: string | null,
-  value: number | null,
-  starting_bid: number | null,
-  bid_increment: number,
-  picture1: string,
-  picture2: string,
-  picture3: string,
-  created_at: timestamp,
-  updated_at: timestamp
+  views: number,                // Incremented on item view
+  last_viewed: timestamp
 }
-```
 
-### bids Collection
-```javascript
+// Document ID: search_{timestamp}
 {
-  bid: number,
-  bidder: string,
-  email: string,
-  phone: string,
-  timestamp: number
+  term: string,                 // Search query
+  timestamp: timestamp
 }
-```
+## 📝 Database Structure
 
-### history Subcollection
-```javascript
-{
-  bid: number,
-  bidder: string,
-  email: string,
-  phone: string,
-  timestamp: number
-}
-```
+**Firestore Collections:**
+- `items_list` - Auction items with details and images
+- `bids` - Current highest bid for each item
+- `history/{item_no}` - Complete bid history (subcollections)
+- `analytics` - Track views, searches, and bid activity
 
-## 🚀 Deployment
+**LocalStorage:**
+- `userInfo` - Guest registration data (name, email, phone)
+   netlify deploy --prod
+   ```
 
-### Build for production
+   When prompted:
+   - Publish directory: `dist`
 
+## 🧪 Testing
+
+Run unit tests:
 ```bash
-npm run build
+npm test
 ```
 
-The production-ready files will be in the `dist/` directory.
-
-### Deploy to Firebase Hosting (recommended)
-
+Run tests in watch mode:
 ```bash
-npm install -g firebase-tools
-firebase login
-firebase init hosting
-firebase deploy
+npm test -- --watch
 ```
+
+Current test coverage includes:
+- Login page validation
+- Bidding room search and filters
+- Component rendering
+
+## 🎨 Design System
+
+### Color Palette
+- **Primary Gold:** `#DAA520` (Goldenrod)
+- **Primary Navy:** `#122c7a` (Deep Blue)
+- **Success Green:** `#10b981` (Emerald)
+- **Error Red:** `#ef4444` (Red)
+- **Warning Yellow:** `#f59e0b` (Amber)
+- **Background:** `#f8f9fa` (Light Gray)
+- **Text:** `#2c3e50` (Dark Gray)
+
+### Typography
+- **Headers:** System font stack
+- **Body:** Sans-serif
+- **Monospace:** Courier (item numbers)
+
+### Spacing
+- Small: `0.5rem` (8px)
+- Medium: `1rem` (16px)
+- Large: `1.5rem` (24px)
+- XL: `2rem` (32px)
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+### Development Guidelines
+
+1. **Code Style**
+   - Use functional components with hooks
+   - Follow folder-based structure (component + CSS in same folder)
+   - Use meaningful variable names
+   - Add comments for complex logic
+
+2. **Commit Messages**
+   - Use conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`
+   - Be descriptive: "feat: add bid increment validation"
+
+3. **Testing**
+   - Write tests for new features
+   - Ensure existing tests pass
+   - Run `npm test` before committing
+
+## 📊 Performance Optimizations
+
+- **Code Splitting:** Route-based code splitting with React Router
+- **Lazy Loading:** Images loaded on demand
+- **Debouncing:** Search input debounced to reduce Firestore reads
+- **Real-time Listeners:** Optimized snapshot listeners with cleanup
+- **Memoization:** Used for expensive computations
+- **CSS Organization:** Co-located styles reduce bundle size
+
+## 🔒 Security Considerations
+
+- **No Authentication:** Currently uses localStorage (demo only)
+- **Client-side Validation:** All inputs validated before submission
+- **Firestore Rules:** Should be configured for production
+- **XSS Protection:** React escapes content by default
+- **HTTPS:** Use HTTPS in production
+- **Environment Variables:** Keep Firebase config secure
+
+## 🐛 Known Issues & Future Enhancements
+
+### Known Issues
+- No server-side validation (client-side only)
+- No email verification system
+- No payment integration
+- LocalStorage can be cleared by users
+
+### Planned Features
+- [ ] User authentication with Firebase Auth
+- [ ] Email notifications for outbid scenarios
+- [ ] Payment gateway integration
+- [ ] Automated auction closing
+- [ ] CSV export for admin
+- [ ] Multi-language support (Thai/English)
+- [ ] Dark mode theme
+- [ ] Bid retraction with penalties
+- [ ] Item categories/tags
+- [ ] Advanced analytics dashboard
 
 ## 📄 License
 
@@ -222,12 +347,44 @@ This project is open source and available under the MIT License.
 ## 👥 Author
 
 **Jpuntul**
+- GitHub: [@Jpuntul](https://github.com/Jpuntul)
 
 ## 🙏 Acknowledgments
 
 - Hand in Hand for Myanmar charity organization
+- Firebase for real-time database infrastructure
+- React community for excellent documentation
 - All contributors and supporters
 
 ---
 
 **Note:** This is a charity auction platform. Please ensure all data is handled responsibly and in compliance with relevant regulations.
+## 🚀 Deployment
+
+**Build for production:**
+```bash
+npm run build
+```
+
+**Deploy to Firebase Hosting:**
+```bash
+firebase init hosting
+firebase deploy
+```
+
+**Deploy to Vercel/Netlify:**
+- Public directory: `dist`
+- Build command: `npm run build`
+
+## 🧪 Testing
+
+```bash
+npm test              # Run tests
+npm test -- --watch   # Watch mode
+```## 🤝 Contributing
+
+Contributions are welcome! Please:
+- Use functional components with hooks
+- Follow folder-based structure (component + CSS in same folder)
+- Use conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`
+- Write tests for new features

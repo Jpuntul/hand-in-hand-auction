@@ -58,7 +58,6 @@ const useBids = () => {
 
 const useNotification = () => ({
   showNotification: (message, type) => {
-    console.log(`${type.toUpperCase()}: ${message}`);
     alert(`${type.toUpperCase()}: ${message}`);
   }
 });
