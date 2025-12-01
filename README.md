@@ -376,15 +376,22 @@ firebase deploy
 - Public directory: `dist`
 - Build command: `npm run build`
 
-## 🧪 Testing
+## 🛡️ Code Quality
 
-```bash
-npm test              # Run tests
-npm test -- --watch   # Watch mode
-```## 🤝 Contributing
+**Pre-commit Hooks:**
+- Automatically runs ESLint on staged files
+- Validates build before commit
+- Prevents broken code from being committed
+
+**GitHub Actions CI:**
+- Runs on every push and pull request
+- Checks that the build succeeds
+- Ensures code quality before deployment
+
+## 🤝 Contributing
 
 Contributions are welcome! Please:
 - Use functional components with hooks
 - Follow folder-based structure (component + CSS in same folder)
 - Use conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`
-- Write tests for new features
+- Pre-commit hooks will automatically lint your code

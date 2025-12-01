@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 import { collection, doc, getDoc, onSnapshot, setDoc, addDoc, query, orderBy } from 'firebase/firestore';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
-import Toast from '../components/Toast/Toast';
-import { useToast } from '../hooks/useToast';
-import ImageGallery from '../components/ImageGallery';
-import '../App.css';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import Toast from '../../components/Toast/Toast';
+import { useToast } from '../../hooks/useToast';
+import ImageGallery from '../../components/ImageGallery/ImageGallery';
+import './HistoryPage.css';
 
 
 
@@ -43,7 +43,7 @@ const HistoryPage = () => {
     const params = new URLSearchParams(location.search);
     const key = params.get('item');
     setItemKey(key);
-  }, [location, navigate]);
+  }, [location, navigate, toast]);
 
   // Fetch item data from Firestore
   useEffect(() => {
@@ -157,11 +157,6 @@ const HistoryPage = () => {
   const handleConfirmNo = () => {
     setModalVisible(false);
     setPendingBid(null);
-  };
-
-  // Navigation handler
-  const handleBack = () => {
-    navigate('/bidding');
   };
 
   return (

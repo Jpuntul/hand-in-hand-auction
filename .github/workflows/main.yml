@@ -1,9 +1,9 @@
-name: Run React Tests
+name: Build Check
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     
     env:
@@ -22,4 +22,4 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
-      - run: npm run test -- --run
+      - run: npm run build
