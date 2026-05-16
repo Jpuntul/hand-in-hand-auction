@@ -302,6 +302,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      place_bid: {
+        Args: { p_amount: number; p_item_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       item_status: "scheduled" | "open" | "closed" | "cancelled"
