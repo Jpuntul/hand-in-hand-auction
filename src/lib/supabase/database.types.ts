@@ -145,6 +145,7 @@ export type Database = {
         Row: {
           bid_count: number
           bid_increment: number
+          categories: Database["public"]["Enums"]["categories"] | null
           created_at: string
           current_bid: number | null
           current_bidder_id: string | null
@@ -166,6 +167,7 @@ export type Database = {
         Insert: {
           bid_count?: number
           bid_increment?: number
+          categories?: Database["public"]["Enums"]["categories"] | null
           created_at?: string
           current_bid?: number | null
           current_bidder_id?: string | null
@@ -187,6 +189,7 @@ export type Database = {
         Update: {
           bid_count?: number
           bid_increment?: number
+          categories?: Database["public"]["Enums"]["categories"] | null
           created_at?: string
           current_bid?: number | null
           current_bidder_id?: string | null
@@ -292,6 +295,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      close_expired_auctions: { Args: never; Returns: number }
       is_admin: { Args: never; Returns: boolean }
       log_audit: {
         Args: {
@@ -306,8 +310,10 @@ export type Database = {
         Args: { p_amount: number; p_item_id: string }
         Returns: Json
       }
+      server_time: { Args: never; Returns: string }
     }
     Enums: {
+      categories: "sport" | "hotel" | "food"
       item_status: "scheduled" | "open" | "closed" | "cancelled"
     }
     CompositeTypes: {
@@ -439,6 +445,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      categories: ["sport", "hotel", "food"],
       item_status: ["scheduled", "open", "closed", "cancelled"],
     },
   },
