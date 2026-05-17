@@ -1,6 +1,6 @@
 // Webhook fired by Supabase Database Webhooks on every INSERT into
-// public.bid_history. Sends an outbid email to the previous bidder
-// (if any) unless they opted out.
+// public.bid_history. Notifies the previous bidder that they've been
+// outbid — via email (if email_optin) and via Web Push (if push_optin).
 //
 // Payload format (Supabase Database Webhook):
 //   { type: "INSERT", table: "bid_history", schema: "public",
@@ -9,11 +9,23 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { corsHeaders } from "../_shared/cors.ts";
 import { outbidEmail, sendEmail } from "../_shared/email.ts";
+import {
+  type PushSubscriptionRecord,
+  pruneExpiredSubscriptions,
+  sendPush,
+} from "../_shared/push.ts";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
+
+const APP_URL = Deno.env.get("APP_URL") ?? "http://localhost:3000";
+const usd = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -43,7 +55,6 @@ Deno.serve(async (req) => {
     previous_bid: number | null;
   };
 
-  // First bid on the item, or same bidder raising their own bid — nothing to do.
   if (!bid.previous_bidder_id || bid.previous_bidder_id === bid.user_id) {
     return new Response("No outbid recipient", {
       status: 200,
@@ -59,7 +70,7 @@ Deno.serve(async (req) => {
     supabase.auth.admin.getUserById(bid.previous_bidder_id),
     supabase
       .from("notification_prefs")
-      .select("email_optin")
+      .select("email_optin, push_optin, push_subscriptions")
       .eq("user_id", bid.previous_bidder_id)
       .maybeSingle(),
     supabase
@@ -69,17 +80,11 @@ Deno.serve(async (req) => {
       .maybeSingle(),
   ]);
 
-  if (authErr || !prevBidderAuth?.user?.email) {
+  if (authErr || !prevBidderAuth?.user) {
     return new Response(
-      `Previous bidder lookup failed: ${authErr?.message ?? "no email"}`,
+      `Previous bidder lookup failed: ${authErr?.message ?? "unknown"}`,
       { status: 200, headers: corsHeaders },
     );
-  }
-  if (prefs && !prefs.email_optin) {
-    return new Response("User opted out of email", {
-      status: 200,
-      headers: corsHeaders,
-    });
   }
   if (!item) {
     return new Response("Item not found", {
@@ -88,17 +93,42 @@ Deno.serve(async (req) => {
     });
   }
 
-  const result = await sendEmail(
-    prevBidderAuth.user.email,
-    outbidEmail({
-      itemName: item.name,
-      itemNo: item.item_no,
-      newBid: bid.amount,
-      previousBid: bid.previous_bid ?? 0,
-    }),
-  );
+  const results: Record<string, unknown> = {};
 
-  return new Response(JSON.stringify({ sent: !result.error, ...result }), {
+  // Email
+  if (prevBidderAuth.user.email && (!prefs || prefs.email_optin)) {
+    const emailResult = await sendEmail(
+      prevBidderAuth.user.email,
+      outbidEmail({
+        itemName: item.name,
+        itemNo: item.item_no,
+        newBid: bid.amount,
+        previousBid: bid.previous_bid ?? 0,
+      }),
+    );
+    results.email = emailResult;
+  }
+
+  // Web Push
+  if (prefs?.push_optin && prefs?.push_subscriptions) {
+    const subs = prefs.push_subscriptions as PushSubscriptionRecord[];
+    if (subs.length > 0) {
+      const pushResult = await sendPush(subs, {
+        title: "You've been outbid",
+        body: `New bid on ${item.name}: ${usd.format(bid.amount)}`,
+        url: `${APP_URL}/bidding`,
+        tag: `outbid-${bid.item_id}`,
+      });
+      results.push = pushResult;
+      await pruneExpiredSubscriptions(
+        supabase,
+        bid.previous_bidder_id,
+        pushResult.expiredEndpoints,
+      );
+    }
+  }
+
+  return new Response(JSON.stringify(results), {
     status: 200,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });

@@ -86,7 +86,65 @@ Until you verify a domain in Resend, emails come from `onboarding@resend.dev`. M
 
 Bidders can opt out of email at **/account/notifications** (linked from the user menu). Opt-outs are stored in `public.notification_prefs.email_optin` and respected by both Edge Functions.
 
-## What's not yet implemented
+## Web Push (browser notifications)
 
-- **Web Push** — instant browser notifications even with tab closed. Planned for Phase 4 part 2.
-- **Reminder emails** — "24 hours before close" and "1 hour before close" via pg_cron. Planned for Phase 4 part 2.
+Edge Functions also deliver Web Push notifications to subscribed devices in parallel with email — they ship simultaneously and have separate opt-in flags.
+
+### One-time VAPID setup
+
+VAPID (Voluntary Application Server Identification) keys authenticate your push messages to browser push services (Apple, Google, Mozilla). Generate a pair once:
+
+```bash
+pnpm gen:vapid
+```
+
+This prints both the public key (safe to expose) and the private key (must stay secret). Follow the printed instructions:
+
+```bash
+# .env.local
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=B...
+
+# Supabase Edge Function secrets
+pnpm exec supabase secrets set VAPID_PUBLIC_KEY=B...
+pnpm exec supabase secrets set VAPID_PRIVATE_KEY=...
+
+# Redeploy so the functions pick up the new secrets
+pnpm exec supabase functions deploy on-bid-placed
+pnpm exec supabase functions deploy on-auction-closed
+```
+
+After this, restart `pnpm dev` so the public key is baked into the client bundle.
+
+### How bidders enable it
+
+1. Go to `/account/notifications`
+2. Toggle **Push notifications on this device** ON
+3. Browser prompts for permission → click Allow
+4. Subscription is stored in `notification_prefs.push_subscriptions` (one entry per device)
+
+Push is **per-device** — enabling on a laptop doesn't enable on a phone, and vice versa. The user toggles separately on each device they want to receive pushes on.
+
+### What gets pushed
+
+| Event | Title | Body |
+|---|---|---|
+| Outbid | "You've been outbid" | "New bid on [item]: $X" |
+| Won | "🎉 You won [item]!" | "Winning bid: $X" |
+| Lost | "Auction closed: [item]" | "Closed at $X. Your highest bid was $Y." |
+
+Clicking a notification opens `/bidding`. Expired endpoints (user revoked permission, uninstalled, etc.) are pruned from the DB automatically when a delivery returns 410/404.
+
+### Browser support
+
+| Browser | Push | Notes |
+|---|---|---|
+| Chrome / Edge / Firefox (desktop) | ✅ | Works whether tab is open or closed |
+| Safari macOS 16.1+ | ✅ | Requires the site be added as a Web App via Share → Add to Dock |
+| iOS Safari 16.4+ | ✅ | Requires the site be added to Home Screen |
+| Android Chrome | ✅ | Works in background |
+
+The settings page detects unsupported browsers and the toggle is disabled.
+
+## What's still not implemented
+
+- **Reminder emails** — "24 hours before close" and "1 hour before close" via pg_cron. Planned for a later session.

@@ -1,6 +1,6 @@
 // Webhook fired by Supabase Database Webhooks on every UPDATE of
-// public.items. Sends "you won" / "you lost" emails when status transitions
-// to 'closed'. Ignores every other update silently.
+// public.items. Sends "you won" / "you lost" emails AND push notifications
+// when status transitions to 'closed'. Ignores every other update silently.
 //
 // Payload format (Supabase Database Webhook):
 //   { type: "UPDATE", table: "items", schema: "public",
@@ -9,17 +9,29 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { corsHeaders } from "../_shared/cors.ts";
 import { lostEmail, sendEmail, wonEmail } from "../_shared/email.ts";
+import {
+  type PushSubscriptionRecord,
+  pruneExpiredSubscriptions,
+  sendPush,
+} from "../_shared/push.ts";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
 
+const APP_URL = Deno.env.get("APP_URL") ?? "http://localhost:3000";
+const usd = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
 type EmailOutcome = {
   user_id: string;
   outcome: "won" | "lost";
-  sent: boolean;
-  error?: unknown;
+  email_sent: boolean;
+  push_sent: number;
 };
 
 Deno.serve(async (req) => {
@@ -48,7 +60,6 @@ Deno.serve(async (req) => {
     winning_bid: number | null;
   };
 
-  // Only fire on the open→closed transition.
   if (oldItem.status === "closed" || newItem.status !== "closed") {
     return new Response("Not a closing transition", {
       status: 200,
@@ -58,25 +69,30 @@ Deno.serve(async (req) => {
 
   const results: EmailOutcome[] = [];
 
-  // 1) Email the winner.
+  // Winner
   if (newItem.winner_user_id && newItem.winning_bid != null) {
-    const sent = await maybeSend({
+    const r = await notify({
       userId: newItem.winner_user_id,
-      template: wonEmail({
+      emailTemplate: wonEmail({
         itemName: newItem.name,
         itemNo: newItem.item_no,
         winningBid: newItem.winning_bid,
       }),
+      pushPayload: {
+        title: `🎉 You won ${newItem.name}!`,
+        body: `Winning bid: ${usd.format(newItem.winning_bid)}`,
+        url: `${APP_URL}/bidding`,
+        tag: `won-${newItem.id}`,
+      },
     });
     results.push({
       user_id: newItem.winner_user_id,
       outcome: "won",
-      sent: !!sent.sent,
-      error: sent.error,
+      ...r,
     });
   }
 
-  // 2) Email all losing bidders (highest bid per user).
+  // Losing bidders (highest bid per user)
   const { data: bids } = await supabase
     .from("bid_history")
     .select("user_id, amount")
@@ -92,20 +108,25 @@ Deno.serve(async (req) => {
   }
 
   for (const [userId, theirBid] of losers.entries()) {
-    const sent = await maybeSend({
+    const r = await notify({
       userId,
-      template: lostEmail({
+      emailTemplate: lostEmail({
         itemName: newItem.name,
         itemNo: newItem.item_no,
         winningBid: newItem.winning_bid ?? 0,
         yourBid: theirBid,
       }),
+      pushPayload: {
+        title: `Auction closed: ${newItem.name}`,
+        body: `Closed at ${usd.format(newItem.winning_bid ?? 0)}. Your highest bid was ${usd.format(theirBid)}.`,
+        url: `${APP_URL}/bidding`,
+        tag: `lost-${newItem.id}`,
+      },
     });
     results.push({
       user_id: userId,
       outcome: "lost",
-      sent: !!sent.sent,
-      error: sent.error,
+      ...r,
     });
   }
 
@@ -115,24 +136,43 @@ Deno.serve(async (req) => {
   });
 });
 
-async function maybeSend({
+async function notify({
   userId,
-  template,
+  emailTemplate,
+  pushPayload,
 }: {
   userId: string;
-  template: { subject: string; html: string };
-}): Promise<{ sent: boolean; error?: unknown }> {
+  emailTemplate: { subject: string; html: string };
+  pushPayload: { title: string; body: string; url?: string; tag?: string };
+}): Promise<{ email_sent: boolean; push_sent: number }> {
   const [{ data: auth, error: authErr }, { data: prefs }] = await Promise.all([
     supabase.auth.admin.getUserById(userId),
     supabase
       .from("notification_prefs")
-      .select("email_optin")
+      .select("email_optin, push_optin, push_subscriptions")
       .eq("user_id", userId)
       .maybeSingle(),
   ]);
-  if (authErr || !auth?.user?.email) return { sent: false, error: authErr };
-  if (prefs && !prefs.email_optin) return { sent: false };
-  const result = await sendEmail(auth.user.email, template);
-  if (result.error) return { sent: false, error: result.error };
-  return { sent: true };
+
+  let emailSent = false;
+  if (auth?.user?.email && !authErr && (!prefs || prefs.email_optin)) {
+    const result = await sendEmail(auth.user.email, emailTemplate);
+    emailSent = !result.error;
+  }
+
+  let pushSent = 0;
+  if (prefs?.push_optin && prefs?.push_subscriptions) {
+    const subs = prefs.push_subscriptions as PushSubscriptionRecord[];
+    if (subs.length > 0) {
+      const pushResult = await sendPush(subs, pushPayload);
+      pushSent = pushResult.sent;
+      await pruneExpiredSubscriptions(
+        supabase,
+        userId,
+        pushResult.expiredEndpoints,
+      );
+    }
+  }
+
+  return { email_sent: emailSent, push_sent: pushSent };
 }
