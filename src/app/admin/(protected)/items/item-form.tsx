@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { ImageUpload } from "@/components/admin/image-upload";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -45,6 +46,7 @@ type FormRaw = {
   start_time: string;
   end_time: string;
   status: (typeof ITEM_STATUSES)[number];
+  image_urls: string[];
 };
 
 function toDatetimeLocal(iso: string | null): string {
@@ -68,6 +70,7 @@ function itemToRaw(item: Item | null): FormRaw {
       start_time: "",
       end_time: "",
       status: defaultItemValues.status,
+      image_urls: [],
     };
   }
   return {
@@ -82,6 +85,7 @@ function itemToRaw(item: Item | null): FormRaw {
     start_time: toDatetimeLocal(item.start_time),
     end_time: toDatetimeLocal(item.end_time),
     status: item.status,
+    image_urls: item.image_urls ?? [],
   };
 }
 
@@ -101,6 +105,7 @@ function rawToValues(raw: FormRaw): ItemFormValues {
     start_time: raw.start_time ? new Date(raw.start_time).toISOString() : null,
     end_time: raw.end_time ? new Date(raw.end_time).toISOString() : null,
     status: raw.status,
+    image_urls: raw.image_urls,
   };
 }
 
@@ -279,6 +284,21 @@ export function ItemForm({ item }: { item?: Item | null }) {
                 id="end_time"
                 type="datetime-local"
                 {...register("end_time")}
+              />
+            </div>
+
+            <div className="space-y-2 sm:col-span-2">
+              <Label>Images</Label>
+              <Controller
+                control={control}
+                name="image_urls"
+                render={({ field }) => (
+                  <ImageUpload
+                    value={field.value}
+                    onChange={field.onChange}
+                    max={3}
+                  />
+                )}
               />
             </div>
           </div>

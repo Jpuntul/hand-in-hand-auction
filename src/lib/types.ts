@@ -8,6 +8,7 @@ export type BidHistory = Database["public"]["Tables"]["bid_history"]["Row"];
 export type NotificationPrefs =
   Database["public"]["Tables"]["notification_prefs"]["Row"];
 export type AuditLog = Database["public"]["Tables"]["audit_log"]["Row"];
+export type WatchlistRow = Database["public"]["Tables"]["watchlist"]["Row"];
 
 // Runtime constants — derive from `as const` arrays so callers can iterate.
 // Values must match the database enums (typecheck below catches drift).
