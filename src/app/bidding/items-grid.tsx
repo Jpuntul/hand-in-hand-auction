@@ -11,13 +11,16 @@ import { ItemCard } from "./item-card";
 export function ItemsGrid({
   initialItems,
   userId,
+  watchedItemIds = [],
 }: {
   initialItems: Item[];
   userId: string | null;
+  watchedItemIds?: string[];
 }) {
   const [items, setItems] = useState<Item[]>(initialItems);
   const [filter, setFilter] = useState<ItemCategory | null>(null);
   const getNow = useServerTime();
+  const watchedSet = new Set(watchedItemIds);
 
   useEffect(() => {
     const supabase = createClient();
@@ -87,6 +90,7 @@ export function ItemsGrid({
               item={item}
               userId={userId}
               getNow={getNow}
+              isWatched={watchedSet.has(item.id)}
             />
           ))}
         </div>

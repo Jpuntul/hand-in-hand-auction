@@ -15,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   type AuthActionState,
-  signInAnonymously,
   signInBidder,
   signUpBidder,
 } from "@/lib/auth/actions";
@@ -24,14 +23,8 @@ const initial: AuthActionState = { ok: false };
 
 export function LoginForm() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [signInState, signInAction, signInPending] = useActionState(
-    signInBidder,
-    initial,
-  );
-  const [signUpState, signUpAction, signUpPending] = useActionState(
-    signUpBidder,
-    initial,
-  );
+  const [signInState, signInAction, signInPending] = useActionState(signInBidder, initial);
+  const [signUpState, signUpAction, signUpPending] = useActionState(signUpBidder, initial);
 
   return (
     <Card>
@@ -129,20 +122,6 @@ export function LoginForm() {
           </form>
         )}
 
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">or</span>
-          </div>
-        </div>
-
-        <form action={signInAnonymously}>
-          <Button type="submit" variant="outline" className="w-full">
-            Continue as guest
-          </Button>
-        </form>
       </CardContent>
       <CardFooter className="justify-center">
         <Button

@@ -1,7 +1,10 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { WatchlistStar } from "@/components/watchlist-star";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -69,10 +72,12 @@ export function ItemCard({
   item,
   userId,
   getNow,
+  isWatched = false,
 }: {
   item: Item;
   userId: string | null;
   getNow: () => number;
+  isWatched?: boolean;
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -86,9 +91,21 @@ export function ItemCard({
     : false;
   const isYourBid = userId != null && item.current_bidder_id === userId;
   const canBid = userId != null && item.status === "open" && !isExpired;
+  const firstImage = item.image_urls?.[0];
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col overflow-hidden">
+      {firstImage && (
+        <div className="relative aspect-video w-full bg-muted">
+          <Image
+            src={firstImage}
+            alt={item.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
+          />
+        </div>
+      )}
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-base">{item.name}</CardTitle>
@@ -101,6 +118,7 @@ export function ItemCard({
             {item.item_no != null && (
               <Badge variant="secondary">#{item.item_no}</Badge>
             )}
+            {userId && <WatchlistStar itemId={item.id} initial={isWatched} />}
           </div>
         </div>
         {item.sponsor && (
@@ -123,17 +141,18 @@ export function ItemCard({
             </span>
           </div>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>
+            <Link
+              href={`/history/${item.id}`}
+              className="hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
               {item.bid_count} bid{item.bid_count === 1 ? "" : "s"}
-              {isYourBid && (
-                <Badge
-                  variant="default"
-                  className="ml-2 h-4 px-1.5 text-[10px]"
-                >
-                  You're winning
-                </Badge>
-              )}
-            </span>
+            </Link>
+            {isYourBid && (
+              <Badge variant="default" className="h-4 px-1.5 text-[10px]">
+                You're winning
+              </Badge>
+            )}
             <span>min next: {fmt(minBid)}</span>
           </div>
           {item.end_time && (

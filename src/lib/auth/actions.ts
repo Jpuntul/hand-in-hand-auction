@@ -117,18 +117,6 @@ export async function signInBidder(
 }
 
 // ============================================================
-// Anonymous bidder
-// ============================================================
-export async function signInAnonymously(_formData?: FormData) {
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInAnonymously();
-  if (error) {
-    throw new Error(error.message);
-  }
-  redirect("/");
-}
-
-// ============================================================
 // Admin sign-in
 //
 // Reads `redirect` from a hidden form field. On success, verifies the

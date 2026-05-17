@@ -21,11 +21,17 @@ export default async function BiddingPage() {
     getCurrentProfile(),
   ]);
 
-  const { data: items } = await supabase
-    .from("items")
-    .select("*")
-    .in("status", ["open", "scheduled"])
-    .order("end_time", { ascending: true, nullsFirst: false });
+  const [{ data: items }, { data: watched }] = await Promise.all([
+    supabase
+      .from("items")
+      .select("*")
+      .in("status", ["open", "scheduled"])
+      .order("end_time", { ascending: true, nullsFirst: false }),
+    user
+      ? supabase.from("watchlist").select("item_id").eq("user_id", user.id)
+      : Promise.resolve({ data: null }),
+  ]);
+  const watchedIds = (watched ?? []).map((w) => w.item_id);
 
   return (
     <div className="container mx-auto max-w-6xl space-y-8 py-8 px-4">
@@ -58,7 +64,11 @@ export default async function BiddingPage() {
       </section>
 
       {items && items.length > 0 ? (
-        <ItemsGrid initialItems={items} userId={user?.id ?? null} />
+        <ItemsGrid
+          initialItems={items}
+          userId={user?.id ?? null}
+          watchedItemIds={watchedIds}
+        />
       ) : (
         <Card>
           <CardHeader>

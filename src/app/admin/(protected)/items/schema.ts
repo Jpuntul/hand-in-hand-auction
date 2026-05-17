@@ -16,6 +16,7 @@ export const itemSchema = z.object({
   start_time: z.string().nullable(),
   end_time: z.string().nullable(),
   status: z.enum(ITEM_STATUSES),
+  image_urls: z.array(z.string()).default([]),
 });
 
 export type ItemFormValues = z.infer<typeof itemSchema>;
@@ -32,4 +33,5 @@ export const defaultItemValues: ItemFormValues = {
   start_time: null,
   end_time: null,
   status: "scheduled",
+  image_urls: [],
 };
