@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { AdminShell } from "@/components/admin/admin-shell";
 import { createClient } from "@/lib/supabase/server";
 import { ItemForm } from "../../item-form";
 
@@ -19,8 +20,8 @@ export default async function EditItemPage({
   if (!item) notFound();
 
   return (
-    <div className="container mx-auto max-w-3xl space-y-6 py-8 px-4">
+    <AdminShell size="default">
       <ItemForm item={item} />
-    </div>
+    </AdminShell>
   );
 }

@@ -1,11 +1,15 @@
 import { redirect } from "next/navigation";
 
-import { getCurrentUser } from "@/lib/auth/queries";
+import { SiteShell } from "@/components/site-shell";
+import { getCurrentProfile, getCurrentUser } from "@/lib/auth/queries";
 import { createClient } from "@/lib/supabase/server";
 import { NotificationsForm } from "./notifications-form";
 
 export default async function NotificationsPage() {
-  const user = await getCurrentUser();
+  const [user, profile] = await Promise.all([
+    getCurrentUser(),
+    getCurrentProfile(),
+  ]);
   if (!user) redirect("/login");
 
   const supabase = await createClient();
@@ -16,17 +20,26 @@ export default async function NotificationsPage() {
     .maybeSingle();
 
   return (
-    <div className="container mx-auto max-w-md space-y-6 py-12 px-4">
-      <header>
-        <h1 className="text-2xl font-bold">Notifications</h1>
-        <p className="text-sm text-muted-foreground">
-          Control how we reach you about your auction activity.
-        </p>
-      </header>
-      <NotificationsForm
-        emailOptin={prefs?.email_optin ?? true}
-        pushOptin={prefs?.push_optin ?? false}
-      />
-    </div>
+    <SiteShell
+      size="narrow"
+      user={{
+        email: user.email ?? null,
+        displayName: profile?.display_name ?? null,
+        isAdmin: profile?.is_admin ?? false,
+      }}
+    >
+      <div className="space-y-6">
+        <section>
+          <h1 className="text-2xl font-bold sm:text-3xl">Notifications</h1>
+          <p className="text-sm text-muted-foreground">
+            Control how we reach you about your auction activity.
+          </p>
+        </section>
+        <NotificationsForm
+          emailOptin={prefs?.email_optin ?? true}
+          pushOptin={prefs?.push_optin ?? false}
+        />
+      </div>
+    </SiteShell>
   );
 }

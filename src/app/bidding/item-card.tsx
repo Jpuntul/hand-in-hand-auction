@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { WatchlistStar } from "@/components/watchlist-star";
@@ -80,6 +80,7 @@ export function ItemCard({
   isWatched?: boolean;
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const router = useRouter();
 
   const minBid =
     item.current_bid != null
@@ -94,7 +95,10 @@ export function ItemCard({
   const firstImage = item.image_urls?.[0];
 
   return (
-    <Card className="flex flex-col overflow-hidden">
+    <Card
+      className="flex flex-col overflow-hidden cursor-pointer transition-shadow hover:shadow-lg"
+      onClick={() => router.push(`/history/${item.id}`)}
+    >
       {firstImage && (
         <div className="relative aspect-video w-full bg-muted">
           <Image
@@ -141,13 +145,9 @@ export function ItemCard({
             </span>
           </div>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <Link
-              href={`/history/${item.id}`}
-              className="hover:underline"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <span>
               {item.bid_count} bid{item.bid_count === 1 ? "" : "s"}
-            </Link>
+            </span>
             {isYourBid && (
               <Badge variant="default" className="h-4 px-1.5 text-[10px]">
                 You're winning
@@ -172,7 +172,7 @@ export function ItemCard({
         <Button
           className="w-full"
           disabled={!canBid}
-          onClick={() => setDialogOpen(true)}
+          onClick={(e) => { e.stopPropagation(); setDialogOpen(true); }}
         >
           {!userId
             ? "Sign in to bid"

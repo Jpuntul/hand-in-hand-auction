@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { Gavel } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
-import { UserMenu } from "@/components/auth/user-menu";
+import { SiteShell } from "@/components/site-shell";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/queries";
 
 export default async function HomePage() {
@@ -12,33 +11,23 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-16 py-12 px-4">
-      <header className="flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <Gavel className="h-6 w-6" />
-          <span className="text-xl font-semibold">Hand in Hand</span>
-        </Link>
-        {user ? (
-          <UserMenu
-            email={user.email ?? null}
-            displayName={profile?.display_name ?? null}
-            isAdmin={profile?.is_admin ?? false}
-          />
-        ) : (
-          <Link
-            href="/login"
-            className={buttonVariants({ variant: "ghost", size: "sm" })}
-          >
-            Sign in
-          </Link>
-        )}
-      </header>
-
-      <section className="space-y-6 text-center">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+    <SiteShell
+      size="wide"
+      user={
+        user
+          ? {
+              email: user.email ?? null,
+              displayName: profile?.display_name ?? null,
+              isAdmin: profile?.is_admin ?? false,
+            }
+          : null
+      }
+    >
+      <section className="space-y-6 py-12 text-center sm:py-20">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
           Charity Auction for Myanmar
         </h1>
-        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+        <p className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg">
           Real-time bidding on items donated by sponsors. Every bid supports
           relief efforts on the ground.
         </p>
@@ -56,6 +45,6 @@ export default async function HomePage() {
           )}
         </div>
       </section>
-    </div>
+    </SiteShell>
   );
 }
