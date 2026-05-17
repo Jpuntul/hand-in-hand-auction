@@ -1,4 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { Package2 } from "lucide-react";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { getCurrentProfile } from "@/lib/auth/queries";
 
 export default async function AdminDashboardPage() {
@@ -13,16 +22,32 @@ export default async function AdminDashboardPage() {
         </p>
       </header>
 
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Link href="/admin/items" className="block">
+          <Card className="h-full transition-colors hover:bg-muted/40">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Package2 className="h-5 w-5 text-primary" />
+                <CardTitle>Items</CardTitle>
+              </div>
+              <CardDescription>
+                Create, schedule, and edit auction items.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              Set start/end times, categories, status, and bid increments.
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+
       <Card>
         <CardHeader>
-          <CardTitle>Coming soon</CardTitle>
+          <CardTitle className="text-base">Coming soon</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm text-muted-foreground">
-          <p>
-            This dashboard will fill in over the next phases of the rewrite:
-          </p>
+        <CardContent className="space-y-1 text-sm text-muted-foreground">
           <ul className="list-disc space-y-1 pl-5">
-            <li>Phase 3 — item scheduling (start/end times, status, bulk tools)</li>
+            <li>Phase 4 — outbid/won/lost notifications</li>
             <li>Phase 6 — live monitoring, manual overrides, audit log viewer</li>
             <li>Phase 6.5 — promote/revoke admin users</li>
           </ul>
