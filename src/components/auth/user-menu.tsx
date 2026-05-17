@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut, Shield, User as UserIcon } from "lucide-react";
+import { Bell, LogOut, Shield, User as UserIcon } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -41,6 +41,10 @@ export function UserMenu({ email, displayName, isAdmin }: UserMenuProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem render={<Link href="/account/notifications" />}>
+          <Bell className="mr-2 h-4 w-4" />
+          Notifications
+        </DropdownMenuItem>
         {isAdmin && (
           <DropdownMenuItem render={<Link href="/admin" />}>
             <Shield className="mr-2 h-4 w-4" />
