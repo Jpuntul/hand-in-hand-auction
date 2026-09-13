@@ -69,7 +69,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 - **[docs/database.md](docs/database.md)** — Entity-relationship diagram, table purposes, invariants, RPC surface, and the RLS access matrix.
 - **[notes/](notes/README.md)** — Changelog of significant changes and decisions (what was done and why).
-- **[AUDIT.md](AUDIT.md) / [DB_AUDIT.md](DB_AUDIT.md)** — The engineering and database audits this codebase was remediated against; `todo/` holds the workstream briefs.
+- **[docs/open-questions.md](docs/open-questions.md)** — Decisions only the organisers can make, with the defaults the code currently assumes.
+- **[docs/backlog.md](docs/backlog.md)** — Deferred improvements.
 - **[ADMIN_SETUP.md](ADMIN_SETUP.md)** — Bootstrapping the initial admin, role management, security guarantees, and dashboard settings.
 - **[DEPLOY.md](DEPLOY.md)** — Production deployment to Vercel, environment configuration, Sentry setup, and the pre-event operational checklist.
 - **[NOTIFICATIONS_SETUP.md](NOTIFICATIONS_SETUP.md)** — Web push notification setup, VAPID key generation, and Supabase Edge Functions.
@@ -136,9 +137,8 @@ src/hooks/          useNow (server-corrected clock via NowContext)
 supabase/migrations four baseline files — schema, functions, rls, ops (never edit; add on top)
 supabase/functions/ Edge Functions + _shared (auth gate, email, push)
 supabase/tests/     pgTAP regression tests (run with `supabase test db`)
-docs/               database.md (ERD + contracts)
+docs/               database.md (ERD + contracts), open-questions.md, backlog.md
 notes/              changelog of significant changes and decisions
-todo/               workstream briefs (A–I) and deferred backlog (Z)
 ```
 
 ## Architecture & Business Logic
@@ -177,4 +177,4 @@ stateDiagram-v2
 - **Append-only Bid History:** `public.bid_history` is append-only. Bids are never physically deleted. When a bid is cancelled by an administrator, the row is soft-cancelled by setting `cancelled_at = clock_timestamp()`, `cancelled_by = auth.uid()`, and `cancel_reason`.
 - **Derived Column Caches:** The `items.current_bid`, `items.current_bidder_id`, `items.bid_count`, and winner columns are cached values maintained exclusively by atomic SQL functions (`place_bid`, `cancel_last_bid`, `force_close_item`). Direct updates to these columns from PostgREST/clients are forbidden via column privileges.
 - **Canonical Ordering:** Accepted bid ordering is strictly `order by id desc` (or `asc`). Serialized sequence `id` guarantees exact resolution order, avoiding clock skew or transaction start timestamp discrepancies.
-- **One Database Per Event:** The system operates on an isolated "one database per event" model (DB_AUDIT §5 / OQ-1). An auction instance serves a single charity event, guaranteeing clean accounting, zero cross-tenant data leaks, and simplified point-in-time recovery.
+- **One Database Per Event:** The system operates on an isolated "one database per event" model (`docs/open-questions.md` OQ-1). An auction instance serves a single charity event, guaranteeing clean accounting, zero cross-tenant data leaks, and simplified point-in-time recovery.

@@ -1,6 +1,9 @@
 # 2026-09-13 — Audits and workstream plan
 
-**Commit audited:** `d7b98f2` (`main`).
+**Commit audited:** `d7b98f2` (`main`). The audit documents and `todo/` briefs described below
+live in git history at commit `8c6faa5`; they were removed from the working tree once the
+remediation landed. What survives in-tree: `docs/database.md`, `docs/open-questions.md`,
+`docs/backlog.md`, and this changelog.
 
 ## Done
 - `AUDIT.md` — full engineering audit (security, correctness, frontend, performance, tests).

@@ -82,7 +82,7 @@ erDiagram
 
 There is no `events` table: **one database = one auction event**. `items` is both the lot and its
 auction. `item_no` is globally unique; the first thing that breaks with a second event is lot
-numbering (see `DB_AUDIT.md` OQ-1).
+numbering (see `open-questions.md` OQ-1).
 
 ## Tables
 
@@ -159,7 +159,7 @@ stateDiagram-v2
 
 `closed → cancelled` is not possible from the UI today (the winner columns would have to be
 nulled in the same statement and they are not client-writable); add a `cancel_item()` RPC if
-needed (`todo/Z-deferred.md`).
+needed (`backlog.md`).
 
 ## Side effects
 
@@ -172,7 +172,9 @@ needed (`todo/Z-deferred.md`).
 
 ## Further reading
 
-- `DB_AUDIT.md` — the audit that produced this design, including open questions OQ-1..9
-  (currency, second event, self-outbid, runner-up winner, erasure path).
+- `open-questions.md` — organiser decisions this design assumes (currency, second event,
+  self-outbid, runner-up winner, erasure path). `backlog.md` — deferred work.
+- The audits that produced this design (`AUDIT.md`, `DB_AUDIT.md`, `todo/`) were removed from
+  the tree to keep it clean; see git commit `8c6faa5`.
 - `notes/2026-09-13-changes.md` — what changed and why, per workstream.
 - `supabase/tests/*.sql` — pgTAP tests that pin every invariant above.
