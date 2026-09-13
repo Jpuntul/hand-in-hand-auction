@@ -42,8 +42,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# claude code (local-only, never commit)
-.claude/
+# claude code — shared config is committed; personal overrides and worktrees are not
+.claude/settings.local.json
+.claude/worktrees/
 
 # supabase local state
 supabase/.branches
