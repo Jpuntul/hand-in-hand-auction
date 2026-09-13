@@ -50,7 +50,9 @@ select is(
 -- 2. extend_deadline twice = +30 minutes
 do $$
 declare
-  v_initial timestamptz := timestamptz '2026-09-13 18:00:00+00';
+  -- relative to now(): a fixed date would eventually fall before start_time and trip
+  -- items_end_after_start (it did, the day after this test was written)
+  v_initial timestamptz := date_trunc('minute', now()) + interval '2 hours';
   v_res jsonb;
   v_final timestamptz;
 begin

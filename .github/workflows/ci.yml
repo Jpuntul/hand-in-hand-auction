@@ -51,18 +51,30 @@ jobs:
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
+        with:
+          # Must be >= the CLI that generated supabase/config.toml (older CLIs reject newer keys).
+          version: 2.98.2
 
       - name: Start Supabase
         run: supabase start
 
       - name: Drift Gate
+        # `supabase db diff` prints its status ("No schema changes found") to stderr and the
+        # SQL diff to stdout. Capture both, then fail on anything that isn't the no-change line.
         run: |
-          DIFF_OUTPUT=$(supabase db diff --schema public)
+          set +e
+          DIFF_OUTPUT=$(supabase db diff --schema public 2>&1)
+          STATUS=$?
+          set -e
+          echo "$DIFF_OUTPUT"
+          if [ "$STATUS" -ne 0 ]; then
+            echo "::error::supabase db diff failed (exit $STATUS)"
+            exit "$STATUS"
+          fi
           if echo "$DIFF_OUTPUT" | grep -q "No schema changes found"; then
             echo "No schema drift detected between migrations and shadow database."
           else
-            echo "Schema drift detected:"
-            echo "$DIFF_OUTPUT"
+            echo "::error::Schema drift detected between migrations and the shadow database"
             exit 1
           fi
 
