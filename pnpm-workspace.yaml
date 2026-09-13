@@ -1,4 +1,5 @@
 allowBuilds:
+  '@sentry/cli': true
   msw: true
   sharp: true
   supabase: true

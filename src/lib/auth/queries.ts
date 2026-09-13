@@ -8,23 +8,23 @@ import type { Profile } from "@/lib/types";
 // getCurrentUser() / getCurrentProfile() without triggering repeat queries.
 
 export const getCurrentUser = cache(async () => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+	const supabase = await createClient();
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+	return user;
 });
 
 export const getCurrentProfile = cache(async (): Promise<Profile | null> => {
-  const user = await getCurrentUser();
-  if (!user) return null;
+	const user = await getCurrentUser();
+	if (!user) return null;
 
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .maybeSingle();
+	const supabase = await createClient();
+	const { data } = await supabase
+		.from("profiles")
+		.select("*")
+		.eq("id", user.id)
+		.maybeSingle();
 
-  return data;
+	return data;
 });

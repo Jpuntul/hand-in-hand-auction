@@ -11,12 +11,16 @@ Both are triggered by **Supabase Database Webhooks** (configured once in the das
 
 ### 1. Add Edge Function secrets
 
-The Edge Functions read these from Supabase's Edge Function secrets, not from `.env.local`. Set them once with the CLI:
+The Edge Functions read these from Supabase's Edge Function secrets, not from `.env.local`. Generate a secure shared secret and set the secrets with the Supabase CLI:
 
 ```bash
+# Generate a random 32-byte hex secret
+openssl rand -hex 32
+
 pnpm exec supabase secrets set RESEND_API_KEY=re_xxx
 pnpm exec supabase secrets set EMAIL_FROM='Hand in Hand <onboarding@resend.dev>'
 pnpm exec supabase secrets set APP_URL=http://localhost:3000
+pnpm exec supabase secrets set WEBHOOK_SECRET=<your-webhook-secret>
 ```
 
 Update `APP_URL` to your Vercel URL once you deploy (Phase 5).
@@ -31,34 +35,24 @@ pnpm exec supabase functions deploy on-auction-closed
 You should see them at:
 <https://supabase.com/dashboard/project/raxaicqhlbmyzngcubye/functions>
 
-### 3. Configure database webhooks
+### 3. Store the webhook secret in Supabase Vault
 
-Go to <https://supabase.com/dashboard/project/raxaicqhlbmyzngcubye/database/hooks> and click **Create a new hook**.
+The database webhooks are version-controlled via baseline migration (`20260913000100_baseline_functions.sql` and `20260913000300_baseline_ops.sql`). They authenticate to Edge Functions using the shared `WEBHOOK_SECRET` stored in Supabase Vault.
 
-**Webhook 1 — outbid notification**
+Store the secret in Vault using the SQL Editor:
 
-| Setting | Value |
-|---|---|
-| Name | `bid-placed-notification` |
-| Table | `bid_history` |
-| Events | ✅ Insert |
-| Type | Supabase Edge Functions |
-| Edge Function | `on-bid-placed` |
-| HTTP method | POST (default) |
-| HTTP headers | leave defaults |
+```sql
+select vault.create_secret('<your-webhook-secret>', 'webhook_secret');
+```
 
-**Webhook 2 — auction closed notification**
+Then refresh the webhook triggers to pick up the secret:
 
-| Setting | Value |
-|---|---|
-| Name | `auction-closed-notification` |
-| Table | `items` |
-| Events | ✅ Update |
-| Type | Supabase Edge Functions |
-| Edge Function | `on-auction-closed` |
-| HTTP method | POST (default) |
+```sql
+select public.install_notification_webhooks();
+```
 
-The Edge Function itself filters out non-closing updates, so the webhook fires on every items UPDATE but only sends emails on the open→closed transition.
+Both triggers (`on_bid_placed_webhook` on `bid_history` and `on_auction_closed_webhook` on `items`) are now active. The `items` trigger fires **only** on status changes (`open -> closed`, `open/paused -> cancelled`).
+
 
 ## Verifying it works
 

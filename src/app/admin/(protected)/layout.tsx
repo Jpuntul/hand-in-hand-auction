@@ -5,9 +5,9 @@ import { AdminGuard } from "@/components/auth/admin-guard";
  * live inside each page via <AdminShell> so per-page width can vary.
  */
 export default function AdminProtectedLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return <AdminGuard>{children}</AdminGuard>;
+	return <AdminGuard>{children}</AdminGuard>;
 }

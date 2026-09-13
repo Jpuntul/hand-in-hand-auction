@@ -2,25 +2,28 @@ import { redirect } from "next/navigation";
 
 import { SiteShell } from "@/components/site-shell";
 import { getCurrentProfile } from "@/lib/auth/queries";
+import { safeRedirectPath } from "@/lib/auth/redirect";
 import { AdminLoginForm } from "./admin-login-form";
 
 export default async function AdminLoginPage({
-  searchParams,
+	searchParams,
 }: {
-  searchParams: Promise<{ redirect?: string }>;
+	searchParams: Promise<{ redirect?: string }>;
 }) {
-  const [profile, { redirect: redirectTo }] = await Promise.all([
-    getCurrentProfile(),
-    searchParams,
-  ]);
+	const [profile, { redirect: rawRedirect }] = await Promise.all([
+		getCurrentProfile(),
+		searchParams,
+	]);
 
-  if (profile?.is_admin) {
-    redirect(redirectTo ?? "/admin");
-  }
+	const redirectTo = safeRedirectPath(rawRedirect, "/admin");
 
-  return (
-    <SiteShell size="narrow" user={null} brand="Hand in Hand · Admin">
-      <AdminLoginForm redirectTo={redirectTo ?? "/admin"} />
-    </SiteShell>
-  );
+	if (profile?.is_admin) {
+		redirect(redirectTo);
+	}
+
+	return (
+		<SiteShell size="narrow" user={null} brand="Hand in Hand · Admin">
+			<AdminLoginForm redirectTo={redirectTo} />
+		</SiteShell>
+	);
 }

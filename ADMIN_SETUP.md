@@ -15,37 +15,38 @@ There is no public sign-up flow for admins. The first admin must be promoted man
    where email = 'admin@example.com';
    ```
 
-4. Sign out (any session loses the change until next sign-in), then visit `/admin/login` and sign back in. You should land on `/admin`.
+4. Sign out, then visit `/admin/login` and sign back in. You should land on `/admin`.
 
-## Inviting additional admins
+## Managing additional admins
 
-Once you have one admin, the planned **Admin Users** page (Phase 6.5) will let you promote any existing user via the UI. Until that ships, repeat the SQL step above for each new admin.
+Once you have bootstrapped the first admin, use the **Admin Users** page at [`/admin/users`](http://localhost:3000/admin/users) to toggle admin privileges for any existing registered user directly from the UI. You can also promote users via the SQL query above.
 
-## Recommended Supabase dashboard settings
+## Required Supabase dashboard settings
 
-Configure these once for production at <https://supabase.com/dashboard/project/raxaicqhlbmyzngcubye/auth>:
+Configure these for production at <https://supabase.com/dashboard/project/raxaicqhlbmyzngcubye/auth>:
 
-- **Email confirmation** — enable for production. Without it, anyone can sign in with an unverified email.
-- **Site URL** — set to your deployment URL (e.g. `https://hand-in-hand.vercel.app`) so confirmation links work.
+- **Email confirmation** — **required** for production. Without it, anyone can sign in with an unverified email.
+- **Site URL** — set to your deployment URL (e.g. `https://hand-in-hand-auction.vercel.app`) so confirmation links work.
 - **Rate limits** — Supabase blocks failed sign-ins after ~30 attempts/hour per IP by default. Tighten in the dashboard if needed.
 
-## Auditing sign-in attempts
+## Auditing admin actions and sign-ins
 
-Every sign-in event (success and failure) is recorded in `public.audit_log` via the `log_audit()` RPC. View recent admin attempts with:
+All admin actions and authentication events are recorded in `public.audit_log` via the `log_audit()` RPC.
+
+- View and search the audit trail directly in the UI at [`/admin/audit-log`](http://localhost:3000/admin/audit-log).
+- Or query recent attempts directly via SQL:
 
 ```sql
 select created_at, action, actor_email, metadata
 from public.audit_log
-where action like 'auth.admin.%'
+where action like 'auth.admin.%' or action like 'admin.%'
 order by created_at desc
 limit 50;
 ```
 
-A full audit-log viewer lands in Phase 6.3.
-
-## Security guarantees
+## Security guarantees & data integrity
 
 - **No self-promotion.** The `prevent_self_promotion` trigger blocks non-admin users from setting their own `is_admin = true`.
-- **Defense in depth on `/admin/*`.** Next.js middleware redirects unauthenticated requests to `/admin/login`; the `AdminGuard` server component additionally checks `profiles.is_admin` and signs out users who lack the role.
-- **Admin sign-in is hardened.** If you sign in via `/admin/login` and are not an admin, the session is immediately terminated and an `auth.admin.signin.denied` event is logged.
-- **`.env.local` is never committed.** The deny rules in `~/.claude/settings.json` also prevent assistant tools from reading it.
+- **Defense in depth on `/admin/*`.** Next.js middleware checks the session and redirects unauthenticated users to `/admin/login`; `AdminGuard` additionally verifies `profiles.is_admin` and redirects unauthorized users to `/admin/login?redirect=...` without signing them out.
+- **Admin sign-in is hardened.** If a non-admin signs in via `/admin/login`, the session is terminated and an `auth.admin.signin.denied` event is logged.
+- **Deletion restrictions.** Users with bids cannot be deleted; items with bids cannot be deleted — cancel instead. All bid and item foreign keys enforce `ON DELETE RESTRICT` to protect auditability and financial integrity.

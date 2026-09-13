@@ -10,14 +10,10 @@ import { getCurrentProfile } from "@/lib/auth/queries";
  * /admin/* routes; this guard handles the second case — authenticated but
  * lacking the admin role.
  */
-export async function AdminGuard({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const profile = await getCurrentProfile();
-  if (!profile?.is_admin) {
-    redirect("/admin/login");
-  }
-  return <>{children}</>;
+export async function AdminGuard({ children }: { children: React.ReactNode }) {
+	const profile = await getCurrentProfile();
+	if (!profile?.is_admin) {
+		redirect("/admin/login");
+	}
+	return <>{children}</>;
 }

@@ -7,7 +7,7 @@
 //     record: <new row>, old_record: null }
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
-import { corsHeaders } from "../_shared/cors.ts";
+import { requireWebhookSecret } from "../_shared/auth.ts";
 import { outbidEmail, sendEmail } from "../_shared/email.ts";
 import {
   type PushSubscriptionRecord,
@@ -28,14 +28,13 @@ const usd = new Intl.NumberFormat("en-US", {
 });
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+  const authResponse = requireWebhookSecret(req);
+  if (authResponse) {
+    return authResponse;
   }
+
   if (req.method !== "POST") {
-    return new Response("Method not allowed", {
-      status: 405,
-      headers: corsHeaders,
-    });
+    return new Response("Method not allowed", { status: 405 });
   }
 
   const payload = await req.json().catch(() => null);
@@ -44,22 +43,27 @@ Deno.serve(async (req) => {
     payload.type !== "INSERT" ||
     payload.table !== "bid_history"
   ) {
-    return new Response("Ignored", { status: 200, headers: corsHeaders });
+    return new Response("Ignored", { status: 200 });
   }
 
-  const bid = payload.record as {
-    item_id: string;
-    user_id: string;
-    amount: number;
-    previous_bidder_id: string | null;
-    previous_bid: number | null;
-  };
+  const recordId = payload.record?.id;
+  if (!recordId) {
+    return new Response("Missing record id", { status: 400 });
+  }
+
+  // D2: Trust the DB, not the payload. Re-read the row from the database with service-role.
+  const { data: bid, error: bidErr } = await supabase
+    .from("bid_history")
+    .select("id, item_id, user_id, amount, previous_bidder_id, previous_bid")
+    .eq("id", recordId)
+    .maybeSingle();
+
+  if (bidErr || !bid) {
+    return new Response("Bid not found", { status: 200 });
+  }
 
   if (!bid.previous_bidder_id || bid.previous_bidder_id === bid.user_id) {
-    return new Response("No outbid recipient", {
-      status: 200,
-      headers: corsHeaders,
-    });
+    return new Response("No outbid recipient", { status: 200 });
   }
 
   const [
@@ -81,16 +85,10 @@ Deno.serve(async (req) => {
   ]);
 
   if (authErr || !prevBidderAuth?.user) {
-    return new Response(
-      `Previous bidder lookup failed: ${authErr?.message ?? "unknown"}`,
-      { status: 200, headers: corsHeaders },
-    );
+    return new Response("Previous bidder lookup failed", { status: 200 });
   }
   if (!item) {
-    return new Response("Item not found", {
-      status: 200,
-      headers: corsHeaders,
-    });
+    return new Response("Item not found", { status: 200 });
   }
 
   const results: Record<string, unknown> = {};
@@ -130,6 +128,6 @@ Deno.serve(async (req) => {
 
   return new Response(JSON.stringify(results), {
     status: 200,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" },
   });
 });

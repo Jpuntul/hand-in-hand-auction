@@ -98,6 +98,21 @@ export function lostEmail(params: {
   return { subject, html: shell(subject, body) };
 }
 
+export function cancelledEmail(params: {
+  itemName: string;
+  itemNo: number | null;
+}) {
+  const subject = `Auction cancelled: ${params.itemName}`;
+  const body = `
+    <h2 style="margin-top: 0; color: #1a1a1a;">Auction cancelled</h2>
+    <p>The auction for <strong>${escapeHtml(params.itemName)}</strong>${params.itemNo != null ? ` (#${params.itemNo})` : ""} was cancelled by the organisers.</p>
+    <p>There are still active items — <a href="${APP_URL}/bidding">browse the auction</a>.</p>
+    <p>Thank you for supporting Hand in Hand for Myanmar.</p>
+  `;
+  return { subject, html: shell(subject, body) };
+}
+
+
 export async function sendEmail(
   to: string,
   payload: { subject: string; html: string },
