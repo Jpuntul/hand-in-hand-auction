@@ -30,9 +30,12 @@
 			"Bash(pnpm exec supabase db reset --linked*)",
 			"Bash(supabase db reset --linked*)",
 			"Bash(pnpm exec supabase db push*)",
-			"Bash(supabase db push*)",
+			"Bash(supabase db push*)"
+		],
+		"ask": [
 			"Bash(git push --force*)",
-			"Bash(git push -f*)"
+			"Bash(git push -f*)",
+			"Bash(git push --force-with-lease*)"
 		]
 	}
 }
