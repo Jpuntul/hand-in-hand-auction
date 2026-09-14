@@ -23,19 +23,21 @@
 			"Bash(git log *)",
 			"Bash(git show *)"
 		],
-		"deny": [
-			"Read(./.env)",
-			"Read(./.env.*)",
-			"Read(./supabase/.temp/**)",
-			"Bash(pnpm exec supabase db reset --linked*)",
-			"Bash(supabase db reset --linked*)",
-			"Bash(pnpm exec supabase db push*)",
-			"Bash(supabase db push*)"
-		],
+		"deny": ["Read(./.env)", "Read(./.env.*)"],
 		"ask": [
 			"Bash(git push --force*)",
 			"Bash(git push -f*)",
-			"Bash(git push --force-with-lease*)"
+			"Bash(git push --force-with-lease*)",
+			"Bash(pnpm exec supabase db reset --linked*)",
+			"Bash(supabase db reset --linked*)",
+			"Bash(pnpm exec supabase db push*)",
+			"Bash(supabase db push*)",
+			"Bash(pnpm exec supabase migration repair*)",
+			"Bash(supabase migration repair*)",
+			"Bash(pnpm exec supabase secrets set*)",
+			"Bash(supabase secrets set*)",
+			"Bash(pnpm exec supabase functions deploy*)",
+			"Bash(supabase functions deploy*)"
 		]
 	}
 }
