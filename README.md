@@ -79,6 +79,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Running Tests & Checks
 
+Git hooks (installed automatically by `pnpm install`): **pre-commit** formats/lints staged files
+with Biome; **pre-push** runs `tsc` and Vitest. CI additionally builds, runs pgTAP, and checks
+for migration drift.
+
 ```bash
 # Run Vitest unit tests
 pnpm test

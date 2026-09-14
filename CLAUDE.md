@@ -30,7 +30,8 @@ pnpm exec supabase gen types typescript --local > src/lib/supabase/database.type
 ```
 
 Definition of done for any change: biome clean, tsc clean, vitest green, build green; DB changes
-also need `supabase test db` green. CI runs all of these plus a migration drift gate.
+also need `supabase test db` green. Git hooks enforce the first three (pre-commit: biome on
+staged files; pre-push: tsc + vitest); CI runs everything plus a migration drift gate.
 
 ## Where things are
 
